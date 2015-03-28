@@ -4,7 +4,7 @@ main()
 {
 	print("\n----------------------------------");
 	print(" Blank Gamemode by your name here");
-	print("----------------------------------\n");
+	print("----------------------------------\n");//Test
 }
 
 public OnGameModeInit()
