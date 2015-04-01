@@ -180,19 +180,18 @@ pip-log.txt
 #banfile
 *.ban
 
+#textfiles
+*.txt
+
 #sublime stuff
 *.sublime-project
 *.sublime-workspace
 
 
 #unwanted files
-crashinfo.txt
-server_log.txt
 server.cfg
 start.bat
 samp-server.exe
-server-readme.txt
-samp-license.txt
 samp-npc.exe
 announce.exe
 
