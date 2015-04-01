@@ -1,10 +1,10 @@
-#include <a_samp>
+#include <../../include/header>
 
 main()
 {
 	print("\n----------------------------------");
 	print(" Blank Gamemode by your name here");
-	print("----------------------------------\n");//Test
+	print("----------------------------------\n");
 }
 
 public OnGameModeInit()
