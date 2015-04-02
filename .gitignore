@@ -30,7 +30,7 @@ Desktop.ini
 *.ban
 
 #debug xml files
-gamemode/*.xml
+gamemodes/*.xml
 
 #textfiles
 *.txt
