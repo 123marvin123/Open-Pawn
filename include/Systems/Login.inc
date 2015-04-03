@@ -1,7 +1,7 @@
 public OnPlayerConnect(playerid)
 {
 	GetPlayerName(playerid, cP->cName[playerid], MAX_PLAYER_NAME);
-	cP->cFlags[playerid] &= ~Loggedin; // Turn of the Login flag
+	cP->cFlags[playerid] &= ~Loggedin; // Turn of the Loginflag
 	
 	#if defined Login_OnPlayerConnect
 		return Login_OnPlayerConnect(playerid);
@@ -30,10 +30,11 @@ public OnPlayerSpawn(playerid)
 		new str[300];
 		format(str, sizeof(str), "Hallo %s,\n\
 								  schön das du zu uns gefunden hast.\n\
-								  Da es sich momentan nur um ein Script handelt welches gerade erst begonnen wurde, siehst du diese MessageBox.\n\
-								  Im Laufe der Zeit wird es sicherlich noch änderungen geben\n\
+								  Da es sich momentan nur um ein Script handelt welches gerade erst begonnen wurde, siehst du diese Textbox.\n\
+								  Im Laufe der Zeit wird es sicherlich noch Änderungen geben\n\
 								  Schließlich handelt es sich hierbei um ein Open Source Script.", cP->cName[playerid]);
 		ShowPlayerDialog(playerid, DIALOG_INFO, DIALOG_STYLE_MSGBOX, "Willkommen", str, "OK", "");
+		cP->cFlags[playerid] |= Loggedin; // Turn on the Loginflag
 	}
 	#if defined Login_OnPlayerSpawn
 		return Login_OnPlayerSpawn(playerid);

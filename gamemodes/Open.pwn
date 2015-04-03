@@ -3,7 +3,9 @@
 main()
 {
 	print("\n----------------------------------");
-	print(" Blank Gamemode by your name here");
+	print(" Open Source Gamemode");
+	print(" Source can be found under:");
+	print(" https://github.com/Reclusior/Open-Pawn");
 	print("----------------------------------\n");
 }
 

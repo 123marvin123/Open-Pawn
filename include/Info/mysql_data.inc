@@ -1,4 +1,4 @@
-#define HOST 		"localhost"
-#define DB 			"Placeholder"
-#define USER 		"Placeholder"
-#define PASS 		"Placeholder"
+#define HOST 				"151.80.196.129"
+#define DB 					"zero"
+#define PASS 				"343Zero"
+#define USER 				"zero"
