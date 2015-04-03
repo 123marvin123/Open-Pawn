@@ -7,14 +7,17 @@ Please look for them by yourself.
 
 The server currently needs to run:
 
-SA:MP 0.3.7 RC3 Server
-MySQL Plugin from BlueG R39(-3)
+SA:MP 0.3.7 RC3 Server and MySQL Plugin from BlueG R39(-3)
 
-----------------------------------
+-------------------------------------------------------------------------------------------------------------------------
 
 If you're working on this script:
 
-use english in the comments and the commits
-use the current struct to keep the code clean
-if you need to add some folders e.g. for systems - do it.
-don't upload your local MySQL database or connection informations - please use placeholder.
+Use english for variables and functions, in the comments and commits.
+
+Use the current struct to keep the code clean
+
+If you need to add some folders or files e.g. for systems - do it.
+
+don't upload your local MySQL database or connection informations - for this please use the mysql_data.inc.
+You can find it in the folder "include/Info"
