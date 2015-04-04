@@ -10,6 +10,7 @@ public OnGameModeInit()
 	if(error == ER_DBACCESS_DENIED_ERROR || error == ER_ACCESS_DENIED_ERROR)
 	{
 		print("Couldn't reach the MySQL Server.\nServer shutting down.\nOpen the mysql_log.txt for more information.");
+		SetTimer("ShuttingDown", 5000, false);
 		return true;
 	}
 	else print("Connection successfull");
