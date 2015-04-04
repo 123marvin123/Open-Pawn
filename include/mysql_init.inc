@@ -9,8 +9,7 @@ public OnGameModeInit()
 	new error = mysql_errno(ServerVars[MySQLHandle]);
 	if(error == ER_DBACCESS_DENIED_ERROR || error == ER_ACCESS_DENIED_ERROR)
 	{
-		print("Couldn't reach the MySQL Server.\nServer shooting down.\nOpen the mysql_log.txt for more information.");
-		SetTimer("ShootingDown", 5000, false);
+		print("Couldn't reach the MySQL Server.\nServer shutting down.\nOpen the mysql_log.txt for more information.");
 		return true;
 	}
 	else print("Connection successfull");
@@ -36,8 +35,8 @@ public OnGameModeExit()
 	#endif
 }
 
-forward ShootingDown();
-public ShootingDown()
+forward ShuttingDown();
+public ShuttingDown()
 {
 	SendRconCommand("exit");
 	return true;
