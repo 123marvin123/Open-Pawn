@@ -1,4 +1,4 @@
-#define HOST 				"151.80.196.129"
-#define DB 					"zero"
-#define PASS 				"343Zero"
-#define USER 				"zero"
+#define HOST 				"Placeholder"
+#define DB 					"Placeholder"
+#define PASS 				"Placeholder"
+#define USER 				"Placeholder"
