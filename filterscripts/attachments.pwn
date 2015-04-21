@@ -253,7 +253,7 @@ new AttachmentObjects[][AttachmentEnum] = {
 {19488, "HatBowler6"},
 {19513, "whitephone"},
 {19578, "Banana"},
-{19515, "GreySwatArm"}
+{19418, "HandCuff"}
 };
 
 new AttachmentBones[][24] = {
@@ -369,12 +369,12 @@ public OnPlayerEditAttachedObject( playerid, response, index, modelid, boneid,
                                    Float:fRotX, Float:fRotY, Float:fRotZ,
                                    Float:fScaleX, Float:fScaleY, Float:fScaleZ )
 {
-    //new debug_string[256+1];
-	//format(debug_string,256,"SetPlayerAttachedObject(playerid,%d,%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f)",
-        //index,modelid,boneid,fOffsetX,fOffsetY,fOffsetZ,fRotX,fRotY,fRotZ,fScaleX,fScaleY,fScaleZ);
+    new debug_string[256+1];
+	format(debug_string,256,"SetPlayerAttachedObject(playerid,%d,%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f)",
+           index,modelid,boneid,fOffsetX,fOffsetY,fOffsetZ,fRotX,fRotY,fRotZ,fScaleX,fScaleY,fScaleZ);
 
-	//print(debug_string);
-    //SendClientMessage(playerid, 0xFFFFFFFF, debug_string);
+	print(debug_string);
+    SendClientMessage(playerid, 0xFFFFFFFF, debug_string);
     
     SetPlayerAttachedObject(playerid,index,modelid,boneid,fOffsetX,fOffsetY,fOffsetZ,fRotX,fRotY,fRotZ,fScaleX,fScaleY,fScaleZ);
     SendClientMessage(playerid, 0xFFFFFFFF, "You finished editing an attached object");

@@ -317,6 +317,11 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		 LoopingAnim(playerid,"PED","KO_SHOT_FACE",4.0, 0, 1, 1, 1, -1);
          return 1;
     }
+    
+    if(strcmp(cmd, "/floorhit", true) == 0) {
+         ApplyAnimation(playerid,"PED", "FLOOR_hit_f", 4.1, 0, 0, 0, 1, 0);
+         return 1;
+    }
 
     /* Would allow people to troll... but would be cool as a script
 	   controlled function
