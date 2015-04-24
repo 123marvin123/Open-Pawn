@@ -52,4 +52,4 @@ gamemodes/Backups/
 include/Backups/
 
 #unwanted .inc
-include/Info/mysql_data.inc
+mysql_data.inc
