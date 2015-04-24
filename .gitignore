@@ -43,7 +43,6 @@ gamemodes/*.xml
 #unwanted files
 server.cfg
 start.bat
-include/Info/mysql_data.inc
 
 #unwanted folders
 plugins/
@@ -51,3 +50,6 @@ pawno/
 
 gamemodes/Backups/
 include/Backups/
+
+#unwanted .inc
+include/Info/mysql_data.inc
