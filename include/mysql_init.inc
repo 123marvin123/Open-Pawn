@@ -7,13 +7,14 @@ public OnGameModeInit()
 	ServerVars[MySQLHandle] = mysql_connect(HOST, USER, DB, PASS);
 	
 	new error = mysql_errno(ServerVars[MySQLHandle]);
-	if(error == ER_DBACCESS_DENIED_ERROR || error == ER_ACCESS_DENIED_ERROR)
+	if(error == ER_DBACCESS_DENIED_ERROR || error == ER_ACCESS_DENIED_ERROR || error == 2005) // 2005 = Unknown MySQL server host
 	{
 		print("Couldn't reach the MySQL Server.\nServer shutting down.\nOpen the mysql_log.txt for more information.");
+		ServerVars[Flags] |= NoConnectionShutDown;
 		SetTimer("ShuttingDown", 5000, false);
 		return true;
 	}
-	else print("Connection successfull");
+	print("Connection successfull");
 	
 	mysql_log(LOG_ALL);
 	print("\nMySQL Connection initialized\n");
@@ -27,7 +28,10 @@ public OnGameModeInit()
 
 public OnGameModeExit()
 {
-	mysql_close(ServerVars[MySQLHandle]);
+	if(!(ServerVars[Flags] & NoConnectionShutDown))
+	{
+		mysql_close(ServerVars[MySQLHandle]);
+	}
 
 	#if defined mysql_OnGameModeExit
 		return mysql_OnGameModeExit();

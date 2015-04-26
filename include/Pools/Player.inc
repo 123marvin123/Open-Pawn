@@ -1,6 +1,8 @@
 enum constantvars
 {
+	uID,
 	cName[MAX_PLAYER_NAME],
+	Skin,
 	constantflags:cFlags
 };
 
