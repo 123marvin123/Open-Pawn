@@ -30,7 +30,7 @@ public OnPlayerConnect(playerid)
 public OnPlayerRequestClass(playerid, classid)
 {
 	//Skip ClassSelection
-	SetSpawnInfo(playerid, 0, 0, 1958.3783, 1343.1572, 15.3746, 270.0, 0, 0, 0, 0, 0, 0);
+	SetSpawnInfo(playerid, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	SpawnPlayer(playerid);
 	
 	#if defined Login_OnPlayerRequestClass
@@ -120,11 +120,15 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		}
 		case DIALOG_LOGIN:
 		{
-			if(cP->uID[playerid])
+			if(response)
 			{
-				new query[120];
-				mysql_format(ServerVars[MySQLHandle], query, sizeof(query), "SELECT `Hash` FROM `Password` WHERE `UserID` = %d;", cP->uID[playerid]);
-				mysql_pquery(ServerVars[MySQLHandle], query, "OnPasswordCheck", "ds", playerid, inputtext);
+				if(cP->uID[playerid])
+				{
+					new query[120];
+					mysql_format(ServerVars[MySQLHandle], query, sizeof(query), "SELECT `Hash` FROM `Password` WHERE `UserID` = %d;", cP->uID[playerid]);
+					mysql_pquery(ServerVars[MySQLHandle], query, "OnPasswordCheck", "ds", playerid, inputtext);
+				}
+				else Kick(playerid);
 			}
 			else Kick(playerid);
 		}

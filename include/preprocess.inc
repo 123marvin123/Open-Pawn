@@ -1,10 +1,17 @@
-#define DEBUG				1
-#define RELEASE 			2
-
-#define RELEASE_STATE		DEBUG
-
 #define MODE 				"Open Pawn"
 
 #define cP->%2[%1] 			cPlayer[%1][%2]
 
 #define isnull(%1)  		((%1[0] == 0) || (%1[0] == 1 && %1[1] == 0))
+
+/*
+ * ----------------------------------------
+ * For Color.inc
+ * ----------------------------------------
+ */
+
+#define Color(%0)		((%0 << 8) + 0xFF)
+#define ARGB(%0)		(0xFF + (%0))
+
+#define ColorEx(%0, %1)	((%0 << 8) + %1)
+#define ARGBEx(%0, %1)	(%1 + (%0))

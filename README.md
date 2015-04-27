@@ -2,14 +2,15 @@
 An Open Source Gamemode for SA:MP
 
 Note: This repository don't include the SAMP software or the plugins to run the server.
-Please look for them by yourself.
+Please download them by yourself.
 
 
 The server currently needs to run:
 
-* SA:MP 0.3.7 RC5 Server (http://team.sa-mp.com/037RC/samp037_svr_RC5-1_win32.zip)
+* SA:MP 0.3.7 RC6 Server (http://team.sa-mp.com/037RC/samp037_svr_RC6-1_win32.zip)
 * MySQL Plugin from BlueG R39(-3) (https://github.com/pBlueG/SA-MP-MySQL)
-* bycrpt from Lassir V2.2.3 (https://github.com/lassir/bcrypt-samp)
+* bycrpt from Lassir 2.2.3 (https://github.com/lassir/bcrypt-samp)
+* sscanf 2.8.2 from Y_Less reuploaded by Emmet_ (https://dl.dropboxusercontent.com/u/102595204/sscanf-2.8.2.zip)
 
 -------------------------------------------------------------------------------------------------------------------------
 
@@ -21,9 +22,7 @@ The server currently needs to run:
 * don't upload your local MySQL database or connection informations - for this please use the mysql_data.inc.
 You can find it in the folder "include/Info"
 
-When you changed the connection information in mysql_data.inc.
-Open the git shell and push this:
-
-`git update-index --assume-unchanged include/Info/mysql_data.inc`
-
-This will stop tracking the mysql_data.inc filefor in the commits.
+When you changed the connection information in mysql_data.inc.\r\n
+Open the git shell and push this:\r\n
+`git update-index --assume-unchanged include/Info/mysql_data.inc`\r\n
+This will stop tracking the mysql_data.inc file in the commits.

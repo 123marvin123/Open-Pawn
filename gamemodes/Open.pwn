@@ -17,7 +17,8 @@ public OnGameModeInit()
 
 public OnPlayerSpawn(playerid)
 {
-	SetPlayerPos(playerid, 1958.3783, 1343.1572, 15.3746);
-	SetPlayerFacingAngle(playerid, 270.0);
+	SetPlayerPos(playerid, -2248.2258,2330.5852,4.9741);
+	SetPlayerFacingAngle(playerid, 55.0);
+	SetCameraBehindPlayer(playerid);
 	return 1;
 }
