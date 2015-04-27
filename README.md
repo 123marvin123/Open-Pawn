@@ -22,7 +22,10 @@ The server currently needs to run:
 * don't upload your local MySQL database or connection informations - for this please use the mysql_data.inc.
 You can find it in the folder "include/Info"
 
-When you changed the connection information in mysql_data.inc.\r\n
-Open the git shell and push this:\r\n
-`git update-index --assume-unchanged include/Info/mysql_data.inc`\r\n
+When you changed the connection information in mysql_data.inc.
+
+Open the git shell and push this:
+
+`git update-index --assume-unchanged include/Info/mysql_data.inc`
+
 This will stop tracking the mysql_data.inc file in the commits.
