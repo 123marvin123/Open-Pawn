@@ -47,7 +47,16 @@
  */
 
 #include <../../include/Pools/Player>
+#include <../../include/Pools/Actor>
 
+/*
+ * ---------------------------------------------------------
+ * Hook(s) Part
+ * ---------------------------------------------------------
+ */
+
+#include <../../include/Systems/Hooks/ActorHooks>
+ 
 /*
  * ---------------------------------------------------------
  * Variables und Info Part

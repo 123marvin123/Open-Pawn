@@ -12,6 +12,7 @@ main()
 public OnGameModeInit()
 {
 	SetGameModeText(MODE);
+	UsePlayerPedAnims();
 	return 1;
 }
 

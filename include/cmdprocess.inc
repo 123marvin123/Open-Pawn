@@ -13,7 +13,7 @@ public OnPlayerCommandText(playerid,cmdtext[])
 		}
 		++k;
 	}
-	format(cmd,38,"CMD_%s", cmd);
+	strins(cmd, "CMD_", 0, 4); // much better than format.
 	new idx = funcidx(cmd), pointer;
 	if(idx == -1)
 	{

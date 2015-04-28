@@ -165,7 +165,7 @@ public OnPlayerAccountCheck(playerid)
 	if(cP->uID[playerid])
 	{
 		format(str, sizeof(str), "Herzlich Willkommen %s,\n\
-								  danke, das wir dich erneut ei uns begrüßen dürfen.\n\
+								  danke, das wir dich erneut bei uns begrüßen dürfen.\n\
 								  Um weiter zu spielen brauchst du nur dein Passwort einzutragen\n\
 								  und zu bestätigen.", cP->cName[playerid]);
 		ShowPlayerDialog(playerid, DIALOG_LOGIN, DIALOG_STYLE_PASSWORD, "Willkommen", str, "Bestätigen", "Ciao");
@@ -202,8 +202,8 @@ public OnPasswordChecked(playerid)
 	{
 		new str[120];
 		format(str, sizeof(str), "Wir konnten dich nicht einloggen.\n\
-									Das eingegebene Passwort ist falsch.\n\
-									Bitte versuch es erneut.", cP->cName[playerid]);
+								 Das eingegebene Passwort ist falsch.\n\
+								 Bitte versuch es erneut.", cP->cName[playerid]);
 		ShowPlayerDialog(playerid, DIALOG_LOGIN, DIALOG_STYLE_PASSWORD, "Login", str, "Login", "Ciao");
 	}
 	return true;
