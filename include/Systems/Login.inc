@@ -17,8 +17,8 @@ forward OnPasswordChecked(playerid);
  
 public OnPlayerConnect(playerid)
 {
-	GetPlayerName(playerid, cP->cName[playerid], MAX_PLAYER_NAME);
-	cP->cFlags[playerid] &= ~Loggedin; // Turn of the Loginflag
+	GetPlayerName(playerid, cPlayer->cName[playerid], MAX_PLAYER_NAME);
+	cPlayer->cFlags[playerid] &= ~Loggedin; // Turn of the Loginflag
 	
 	#if defined Login_OnPlayerConnect
 		return Login_OnPlayerConnect(playerid);
@@ -42,7 +42,7 @@ public OnPlayerRequestClass(playerid, classid)
 
 public OnPlayerSpawn(playerid)
 {
-	if(!(cP->cFlags[playerid] & Loggedin))
+	if(!(cPlayer->cFlags[playerid] & Loggedin))
 	{
 		new str[344];
 		#if RELEASE_STATE == DEBUG
@@ -50,10 +50,10 @@ public OnPlayerSpawn(playerid)
 								  schön das du zu uns gefunden hast.\n\
 								  Da es sich momentan nur um ein Script handelt welches gerade erst begonnen wurde, siehst du diese Textbox.\n\
 								  Im Laufe der Zeit wird es sicherlich noch Änderungen geben\n\
-								  Schließlich handelt es sich hierbei um ein Open Source Script.", cP->cName[playerid]);
+								  Schließlich handelt es sich hierbei um ein Open Source Script.", cPlayer->cName[playerid]);
 		ShowPlayerDialog(playerid, DIALOG_INFO, DIALOG_STYLE_MSGBOX, "Willkommen", str, "OK", "");
 		#endif
-		mysql_format(ServerVars[MySQLHandle], str, sizeof(str), "SELECT `uID`, `Skin` FROM `User` WHERE `Name` = '%e' LIMIT 1;", cP->cName[playerid]);
+		mysql_format(ServerVars[MySQLHandle], str, sizeof(str), "SELECT `uID`, `Skin` FROM `User` WHERE `Name` = '%e' LIMIT 1;", cPlayer->cName[playerid]);
 		mysql_pquery(ServerVars[MySQLHandle], str, "OnPlayerAccountCheck", "d", playerid);
 	}
 	#if defined Login_OnPlayerSpawn
@@ -71,12 +71,12 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		case DIALOG_INFO:
 		{
 			new str[344];
-			if(cP->uID[playerid])
+			if(cPlayer->uID[playerid])
 			{
 				format(str, sizeof(str), "Herzlich Willkommen %s,\n\
 										  danke, das wir dich erneut ei uns begrüßen dürfen.\n\
 										  Um weiter zu spielen brauchst du nur dein Passwort einzutragen\n\
-										  und zu bestätigen.", cP->cName[playerid]);
+										  und zu bestätigen.", cPlayer->cName[playerid]);
 				ShowPlayerDialog(playerid, DIALOG_LOGIN, DIALOG_STYLE_PASSWORD, "Willkommen", str, "Bestätigen", "Ciao");
 			}
 			else
@@ -86,7 +86,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 										  danke das du dich für unseren Server entscheiden hast.\n\
 										  Allerdings besitzt du aktuell keinen Account bei uns\n\
 										  das macht nichts, wenn du im unten stehenden Feld ein Passwort eingibst,\n\
-										  registierst du dich völlig automatisch bei uns und kannst jederzeit wiederkommen ohne neu beginnen zu müssen.", cP->cName[playerid]);
+										  registierst du dich völlig automatisch bei uns und kannst jederzeit wiederkommen ohne neu beginnen zu müssen.", cPlayer->cName[playerid]);
 				ShowPlayerDialog(playerid, DIALOG_REGISTER, DIALOG_STYLE_PASSWORD, "Willkommen", str, "Bestätigen", "Nope");
 			}
 			return true;
@@ -99,16 +99,16 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				new hash[140];
 				if(!isnull(inputtext))
 				{
-					format(hash, sizeof(hash), "%s%s", cP->cName[playerid], inputtext);
+					format(hash, sizeof(hash), "%s%s", cPlayer->cName[playerid], inputtext);
 					bcrypt_hash(hash, 14, "OnPasswordHashed", "d", playerid);
-					cP->cFlags[playerid] |= Loggedin;
+					cPlayer->cFlags[playerid] |= Loggedin;
 					return true;
 				}
 				else
 				{
 					format(hash, sizeof(hash), "Wir konnten dich nicht registieren.\n\
 												Es wurde kein Passwort eingegeben.\n\
-												Bitte versuch es erneut.", cP->cName[playerid]);
+												Bitte versuch es erneut.", cPlayer->cName[playerid]);
 					ShowPlayerDialog(playerid, DIALOG_REGISTER, DIALOG_STYLE_PASSWORD, "Willkommen", hash, "Login", "Ciao");
 				}
 			}
@@ -122,10 +122,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		{
 			if(response)
 			{
-				if(cP->uID[playerid])
+				if(cPlayer->uID[playerid])
 				{
 					new query[120];
-					mysql_format(ServerVars[MySQLHandle], query, sizeof(query), "SELECT `Hash` FROM `Password` WHERE `UserID` = %d;", cP->uID[playerid]);
+					mysql_format(ServerVars[MySQLHandle], query, sizeof(query), "SELECT `Hash` FROM `Password` WHERE `UserID` = %d;", cPlayer->uID[playerid]);
 					mysql_pquery(ServerVars[MySQLHandle], query, "OnPasswordCheck", "ds", playerid, inputtext);
 				}
 				else Kick(playerid);
@@ -146,28 +146,28 @@ public OnPasswordHashed(playerid)
 	bcrypt_get_hash(hash);
 	new query[300];
 	
-	mysql_format(ServerVars[MySQLHandle], query, sizeof(query), "INSERT INTO `User` (`Name`, `Skin`) VALUES ('%e', 5);", cP->cName[playerid]);
+	mysql_format(ServerVars[MySQLHandle], query, sizeof(query), "INSERT INTO `User` (`Name`, `Skin`) VALUES ('%e', 5);", cPlayer->cName[playerid]);
 	mysql_pquery(ServerVars[MySQLHandle], query);
 	
-	mysql_format(ServerVars[MySQLHandle], query, sizeof(query), "INSERT INTO `Password`(`UserID`, `Hash`) VALUES ((SELECT `uID` FROM `User` WHERE `Name` = '%e' LIMIT 1), '%e');", cP->cName[playerid], hash);
+	mysql_format(ServerVars[MySQLHandle], query, sizeof(query), "INSERT INTO `Password`(`UserID`, `Hash`) VALUES ((SELECT `uID` FROM `User` WHERE `Name` = '%e' LIMIT 1), '%e');", cPlayer->cName[playerid], hash);
 	mysql_pquery(ServerVars[MySQLHandle], query);
 	return true;
 }
 
 public OnPlayerAccountCheck(playerid)
 {
-	cP->uID[playerid] = cache_get_row_int(0, 0, ServerVars[MySQLHandle]); // 0 = uID
-	cP->Skin[playerid] = cache_get_row_int(0, 1, ServerVars[MySQLHandle]); // 1 = Skin
-	SetPlayerSkin(playerid, cP->Skin[playerid]);
+	cPlayer->uID[playerid] = cache_get_row_int(0, 0, ServerVars[MySQLHandle]); // 0 = uID
+	cPlayer->Skin[playerid] = cache_get_row_int(0, 1, ServerVars[MySQLHandle]); // 1 = Skin
+	SetPlayerSkin(playerid, cPlayer->Skin[playerid]);
 	
 	#if RELEASE_STATE == RELEASE
 	new str[300];	
-	if(cP->uID[playerid])
+	if(cPlayer->uID[playerid])
 	{
 		format(str, sizeof(str), "Herzlich Willkommen %s,\n\
 								  danke, das wir dich erneut bei uns begrüßen dürfen.\n\
 								  Um weiter zu spielen brauchst du nur dein Passwort einzutragen\n\
-								  und zu bestätigen.", cP->cName[playerid]);
+								  und zu bestätigen.", cPlayer->cName[playerid]);
 		ShowPlayerDialog(playerid, DIALOG_LOGIN, DIALOG_STYLE_PASSWORD, "Willkommen", str, "Bestätigen", "Ciao");
 	}
 	else
@@ -176,7 +176,7 @@ public OnPlayerAccountCheck(playerid)
 								  danke das du dich für unseren Server entscheiden hast.\n\
 								  Allerdings besitzt du aktuell keinen Account bei uns\n\
 								  das macht nichts, wenn du im unten stehenden Feld ein Passwort eingibst,\n\
-								  registierst du dich völlig automatisch bei uns und kannst jederzeit wiederkommen ohne neu beginnen zu müssen.", cP->cName[playerid]);
+								  registierst du dich völlig automatisch bei uns und kannst jederzeit wiederkommen ohne neu beginnen zu müssen.", cPlayer->cName[playerid]);
 		ShowPlayerDialog(playerid, DIALOG_REGISTER, DIALOG_STYLE_PASSWORD, "Willkommen", str, "Login", "Ciao");
 	}
 	#endif
@@ -187,7 +187,7 @@ public OnPasswordCheck(playerid, input[])
 {
 	new password[140], DB_Hash[BCRYPT_HASH_LENGTH];
 	cache_get_row(0, 0, DB_Hash, ServerVars[MySQLHandle]);
-	format(password, sizeof(password), "%s%s", cP->cName[playerid], input);
+	format(password, sizeof(password), "%s%s", cPlayer->cName[playerid], input);
 	bcrypt_check(password, DB_Hash, "OnPasswordChecked", "d", playerid);
 	return true;
 }
@@ -203,7 +203,7 @@ public OnPasswordChecked(playerid)
 		new str[120];
 		format(str, sizeof(str), "Wir konnten dich nicht einloggen.\n\
 								 Das eingegebene Passwort ist falsch.\n\
-								 Bitte versuch es erneut.", cP->cName[playerid]);
+								 Bitte versuch es erneut.", cPlayer->cName[playerid]);
 		ShowPlayerDialog(playerid, DIALOG_LOGIN, DIALOG_STYLE_PASSWORD, "Login", str, "Login", "Ciao");
 	}
 	return true;

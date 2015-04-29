@@ -9,7 +9,6 @@ enum ActorStruct
 enum aFlags (<<= 1)
 {
 	Valid = 1,
-	Moveing
 };
 
 new Actors[MAX_ACTORS][ActorStruct];

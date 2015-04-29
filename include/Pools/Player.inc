@@ -10,4 +10,4 @@ enum constantflags (<<= 1)
 {
 	Loggedin = 1
 };
-new cPlayer[MAX_PLAYERS][constantvars];
+new constPlayer[MAX_PLAYERS][constantvars];

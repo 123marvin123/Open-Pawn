@@ -7,13 +7,13 @@ native _DestroyActor(actorid) 												= DestroyActor;
 __CreateActor(modelid, Float:x, Float:y, Float:z, Float:rotation)
 {
 	new actorid = _CreateActor(modelid, x, y, z, rotation);
-	Actors[actorid][Flags] |= Valid;
+	Actor->Flags[actorid] |= Valid;
 	return actorid;
 }
 
 __DestroyActor(actorid)
 {
 	for(new i; i != _:ActorStruct; i++) Actors[actorid][ActorStruct:i] = 0;
-	Actors[actorid][Flags] = aFlags:0; // Turn all Flags off
+	Actor->Flags[actorid] = aFlags:0; // Turn all Flags off
 	return _DestroyActor(actorid);
 }

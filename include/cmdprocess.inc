@@ -17,8 +17,8 @@ public OnPlayerCommandText(playerid,cmdtext[])
 	new idx = funcidx(cmd), pointer;
 	if(idx == -1)
 	{
-		#if defined BCMD_OnPlayerCommandText
-			return BCMD_OnPlayerCommandText(playerid, cmdtext);
+		#if defined CMD_OnPlayerCommandText
+			return CMD_OnPlayerCommandText(playerid, cmdtext);
 		#else
 			return false;
 		#endif

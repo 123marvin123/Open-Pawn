@@ -33,7 +33,7 @@ Cmd->ca(playerid, params[])
 	format(str, sizeof(str), "Der Actor hat die ID %d", actorid);
 	SendClientMessage(playerid, Color(White), str);
 	format(str, sizeof(str), "ActorID: %d", actorid);
-	Actors[actorid][Label] = Create3DTextLabel(str, Color(Green), Pos[0] + 1.5, Pos[1] + 1.5, Pos[2] + 1, 250, 0);
+	Actor->Label[actorid] = Create3DTextLabel(str, Color(Green), Pos[0] + 1.5, Pos[1] + 1.5, Pos[2] + 1, 250, 0);
 	return true;
 }
 
@@ -42,9 +42,9 @@ Cmd->da(playerid, params[])
 	new actorid;
 	if(sscanf(params, "d", actorid)) return SendClientMessage(playerid, Color(White), "Verwendung: /da [actorid]");
 	if(actorid > MAX_ACTORS) return true;
-	if(Actors[actorid][Flags] & Valid)
+	if(Actor->Flags[actorid] & Valid)
 	{
-		Delete3DTextLabel(Actors[actorid][Label]);
+		Delete3DTextLabel(Actor->Label[actorid]);
 		DestroyActor(actorid);
 	}
 	return true;
