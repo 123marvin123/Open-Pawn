@@ -11,6 +11,14 @@ forward OnPasswordChecked(playerid);
 
 /* 
  * ---------------------------------------------------------
+ * Custom functions for the Loginsystem
+ * ---------------------------------------------------------
+ */
+
+ forward OnPlayerLogin(playerid);
+ 
+/* 
+ * ---------------------------------------------------------
  * Login System
  * ---------------------------------------------------------
  */
@@ -18,7 +26,7 @@ forward OnPasswordChecked(playerid);
 public OnPlayerConnect(playerid)
 {
 	GetPlayerName(playerid, cPlayer->cName[playerid], MAX_PLAYER_NAME);
-	cPlayer->cFlags[playerid] &= ~Loggedin; // Turn of the Loginflag
+	cPlayer->cFlags[playerid] &= ~Logedin; // Turn of the Loginflag
 	
 	#if defined Login_OnPlayerConnect
 		return Login_OnPlayerConnect(playerid);
@@ -40,9 +48,26 @@ public OnPlayerRequestClass(playerid, classid)
 	#endif
 }
 
+public OnPlayerLogin(playerid)
+{
+	if(cPlayer->cFlags[playerid] & Logedin)
+	{
+		new str[50];
+		mysql_format(ServerVars[MySQLHandle], str, sizeof(str), "SELECT * FROM `User` WHERE `uID` = %d LIMIT 1;", cPlayer->uID[playerid]);
+		new Cache:result = mysql_query(ServerVars[MySQLHandle], str, true);
+		constPlayer[playerid][Cord][0] = cache_get_field_content_float(0,"PosX", ServerVars[MySQLHandle]);
+		constPlayer[playerid][Cord][1] = cache_get_field_content_float(0,"PosY", ServerVars[MySQLHandle]);
+		constPlayer[playerid][Cord][2] = cache_get_field_content_float(0,"PosZ", ServerVars[MySQLHandle]);
+		cache_delete(result);
+		SetPlayerPos(playerid, constPlayer[playerid][Cord][0], constPlayer[playerid][Cord][1], constPlayer[playerid][Cord][2]);
+	}
+	else Kick(playerid);
+	return true;
+}
+
 public OnPlayerSpawn(playerid)
 {
-	if(!(cPlayer->cFlags[playerid] & Loggedin))
+	if(!(cPlayer->cFlags[playerid] & Logedin))
 	{
 		new str[344];
 		#if RELEASE_STATE == DEBUG
@@ -74,7 +99,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			if(cPlayer->uID[playerid])
 			{
 				format(str, sizeof(str), "Herzlich Willkommen %s,\n\
-										  danke, das wir dich erneut ei uns begrüßen dürfen.\n\
+										  danke, das wir dich erneut bei uns begrüßen dürfen.\n\
 										  Um weiter zu spielen brauchst du nur dein Passwort einzutragen\n\
 										  und zu bestätigen.", cPlayer->cName[playerid]);
 				ShowPlayerDialog(playerid, DIALOG_LOGIN, DIALOG_STYLE_PASSWORD, "Willkommen", str, "Bestätigen", "Ciao");
@@ -101,7 +126,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				{
 					format(hash, sizeof(hash), "%s%s", cPlayer->cName[playerid], inputtext);
 					bcrypt_hash(hash, 14, "OnPasswordHashed", "d", playerid);
-					cPlayer->cFlags[playerid] |= Loggedin;
+					cPlayer->cFlags[playerid] |= Logedin;
 					return true;
 				}
 				else
@@ -196,7 +221,9 @@ public OnPasswordChecked(playerid)
 {
 	if(bcrypt_is_equal())
 	{
-		ShowPlayerDialog(playerid, DIALOG_LOGIN_INFO, DIALOG_STYLE_MSGBOX, "Login", "Erfolgreich eingelogt", "OK", "");
+		cPlayer->cFlags[playerid] |= Logedin;
+		ShowPlayerDialog(playerid, DIALOG_LOGIN_INFO, DIALOG_STYLE_MSGBOX, "Login", "Erfolgreich eingeloggt", "OK", "");
+		OnPlayerLogin(playerid);
 	}
 	else
 	{
