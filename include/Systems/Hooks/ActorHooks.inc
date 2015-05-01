@@ -22,12 +22,16 @@ __DestroyActor(actorid)
 	return _DestroyActor(actorid);
 }
 
-stock ReSpawnActor(actorid)
+ReSpawnActor(actorid)
 {
-	new Float:Pos[4];
-	GetActorPos(actorid, Pos[0], Pos[1], Pos[2]);
-	GetActorFacingAngle(actorid, Pos[4]);
-	_DestroyActor(actorid);
-	CreateActor(Actor->Model[actorid], Pos[0], Pos[1], Pos[2], Pos[4]);
-	return true;
+	if(IsValidActor(actorid))
+	{
+		new Float:Pos[4];
+		GetActorPos(actorid, Pos[0], Pos[1], Pos[2]);
+		GetActorFacingAngle(actorid, Pos[3]);
+		_DestroyActor(actorid);
+		CreateActor(Actor->Model[actorid], Pos[0], Pos[1], Pos[2], Pos[3]);
+		return true;
+	}
+	return false;
 }

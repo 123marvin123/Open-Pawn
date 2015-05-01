@@ -35,3 +35,13 @@ public OnPlayerUpdate(playerid)
 	}
 	return true;
 }
+
+public OnPlayerGiveDamageActor(playerid, damaged_actorid, Float:amount, weaponid, bodypart)
+{
+	if(IsValidActor(damaged_actorid))
+	{
+		new Float:Health;
+		GetActorHealth(damaged_actorid, Health);
+		if(Health < 1) ReSpawnActor(damaged_actorid);
+	}
+}
