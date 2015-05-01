@@ -60,6 +60,7 @@ public OnPlayerLogin(playerid)
 		constPlayer[playerid][Cord][2] = cache_get_field_content_float(0,"PosZ", ServerVars[MySQLHandle]);
 		cache_delete(result);
 		SetPlayerPos(playerid, constPlayer[playerid][Cord][0], constPlayer[playerid][Cord][1], constPlayer[playerid][Cord][2]);
+		cPlayer->cFlags[playerid] |= LoginDone;
 	}
 	else Kick(playerid);
 	return true;

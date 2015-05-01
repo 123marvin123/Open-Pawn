@@ -9,6 +9,7 @@ enum constantvars
 
 enum constantflags (<<= 1)
 {
-	Logedin = 1
+	Logedin = 1,
+	LoginDone
 };
 new constPlayer[MAX_PLAYERS][constantvars];

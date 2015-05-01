@@ -42,10 +42,50 @@ Cmd->da(playerid, params[])
 	new actorid;
 	if(sscanf(params, "d", actorid)) return SendClientMessage(playerid, Color(White), "Verwendung: /da [actorid]");
 	if(actorid > MAX_ACTORS) return true;
-	if(Actor->Flags[actorid] & Valid)
+	// if(Actor->Flags[actorid] & Valid)
+	if(IsValidActor(actorid))
 	{
 		Delete3DTextLabel(Actor->Label[actorid]);
 		DestroyActor(actorid);
 	}
+	return true;
+}
+Cmd->ha(playerid, params[])
+{
+	new actorid, Float:HealthToSet;
+	if(sscanf(params, "df", actorid, HealthToSet)) return SendClientMessage(playerid, Color(White), "Verwendung: /ha [actorid] [health]");
+	// if(Actor->Flags[actorid] & Valid)
+	if(IsValidActor(actorid))
+	{
+		SetActorHealth(actorid, HealthToSet);
+		new str[60];
+		format(str, sizeof(str), "Actor (ID: %d) health set to %f", actorid, HealthToSet);
+		SendClientMessage(playerid, Color(White), str);
+	}
+	return true;
+}
+Cmd->skin(playerid,params[])
+{
+	new Skinid;
+	if(sscanf(params,"i",Skinid)) return SendClientMessage(playerid,-1, "Verwendung: /skin [0 - 311]");
+	if(Skinid < 311 && Skinid > 0) SetPlayerSkin(playerid, Skinid);
+	return true;
+}
+Cmd->fixveh(playerid)
+{
+	if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER && IsPlayerInAnyVehicle(playerid))
+	{
+		RepairVehicle(GetPlayerVehicleID(playerid));
+		SendClientMessage(playerid, -1, "Fahrzeug repariert");
+	}
+	return true;
+}
+
+Cmd->wep(playerid, params[])
+{
+	new Wep, Amo;
+	if(sscanf(params,"ii",Wep, Amo)) return SendClientMessage(playerid,-1, "Verwendung: /wep [weapon] [ammo]");
+	ResetPlayerWeapons(playerid);
+	GivePlayerWeapon(playerid, Wep, Amo);
 	return true;
 }

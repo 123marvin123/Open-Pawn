@@ -18,8 +18,20 @@ public OnGameModeInit()
 
 public OnPlayerSpawn(playerid)
 {
-	SetPlayerPos(playerid, -2248.2258,2330.5852,4.9741);
-	SetPlayerFacingAngle(playerid, 55.0);
-	SetCameraBehindPlayer(playerid);
+	if(cPlayer->cFlags[playerid] & LoginDone)
+	{
+		SetPlayerPos(playerid, -2248.2258,2330.5852,4.9741);
+		SetPlayerFacingAngle(playerid, 55.0);
+		SetCameraBehindPlayer(playerid);
+	}
 	return 1;
+}
+
+public OnPlayerUpdate(playerid)
+{
+	if((cPlayer->cFlags[playerid] & Logedin) && (cPlayer->cFlags[playerid] & LoginDone))
+	{
+		GetPlayerPos(playerid, cPlayer->Cord[0][playerid], cPlayer->Cord[1][playerid], cPlayer->Cord[2][playerid]);
+	}
+	return true;
 }

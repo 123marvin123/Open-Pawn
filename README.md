@@ -7,7 +7,7 @@ Please download them by yourself.
 
 The server currently needs to run:
 
-* SA:MP 0.3.7 RC6(-3) Server (http://team.sa-mp.com/037RC/samp037_svr_RC6-3_win32.zip)
+* SA:MP 0.3.7 R1 Server (http://www.sa-mp.com/download.php)
 * MySQL Plugin from BlueG R39(-3) (https://github.com/pBlueG/SA-MP-MySQL)
 * bycrpt from Lassir 2.2.3 (https://github.com/lassir/bcrypt-samp)
 * sscanf 2.8.2 from Y_Less reuploaded by Emmet_ (https://dl.dropboxusercontent.com/u/102595204/sscanf-2.8.2.zip)

@@ -1,14 +1,14 @@
 enum ActorStruct
 {
 	Model,
-	Float:Health,
+	//Float:Health,
 	Text3D:Label,
 	
-	aFlags:Flags
+	//aFlags:Flags
 };
-enum aFlags (<<= 1)
+/*enum aFlags (<<= 1)
 {
 	Valid = 1,
-};
+};*/
 
 new Actors[MAX_ACTORS][ActorStruct];
