@@ -79,6 +79,17 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		else FlyMode(playerid);
 		return 1;
 	}
+	if(!strcmp(cmdtext, "/savecam", true))
+	{
+		new Float:FV[3], Float:CP[3];
+		GetPlayerCameraPos(playerid, CP[0], CP[1], CP[2]);
+		GetPlayerCameraFrontVector(playerid, FV[0], FV[1], FV[2]);
+		
+		printf("SetPlayerCameraPos(playerid, %f, %f, %f);", CP[0], CP[1], CP[2]);
+		printf("SetPlayerCameraLookAt(playerid, %f, %f, %f);", CP[0] + FV[0], CP[1] + FV[1], CP[2] + FV[2]);
+		SendClientMessage(playerid, -1, "Camera saved.");
+		return true;
+	}
 	return 0;
 }
 

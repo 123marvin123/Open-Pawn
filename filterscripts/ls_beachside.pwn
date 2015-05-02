@@ -8,8 +8,13 @@
 // * Added a sound effect for the elevator starting/stopping
 //
 // Edited by Matite in January 2015
-// * Added code to remove the existing building, add the new building and
-//   adapted the elevator code so it works in this new building
+// * Adapted the elevator code so it works in this new building and removed the
+//   light pole at the underground car park entrance
+//
+// Updated to v1.03 by Matite in April 2015
+// * Removed the code that removes the existing building map object and the lines
+//   that create the new objects as the original building is now replaced with
+//   the new one by SAMP instead (same as the LS Office building)
 //
 // Updated to v1.02 by Matite in February 2015
 // * Added code for the new car park object and edited the elevator to
@@ -24,9 +29,8 @@
 //
 // Warning...
 // This script uses a total of:
-// * 34 objects = 1 for the elevator, 2 for the elevator doors, 28 for the elevator
-//   floor doors, 1 for the building (replacement LS BeachSide building), 1 for the
-//   interior floors object and 1 for the underground car park object
+// * 31 objects = 1 for the elevator, 2 for the elevator doors and 28 for the
+//   elevator floor doors
 // * 15 3D Text Labels = 14 on the floors and 1 in the elevator
 // * 1 dialog (for the elevator - dialog ID 877)
 // -----------------------------------------------------------------------------
@@ -132,15 +136,6 @@ static Float:FloorZOffsets[14] =
 // Variables
 // ---------
 
-// Stores the created object numbers of the replacement building and interior
-// parts so they can be destroyed when the filterscript is unloaded
-new LSBeachSide1Object;
-new LSBeachSide1InteriorObject;
-
-// Stores the created object number of the new underground cark park so it can
-// be destroyed when the filterscript is unloaded
-new LSBeachSide1CPObject;
-
 // Stores the created object numbers of the elevator, the elevator doors and
 // the elevator floor doors so they can be destroyed when the filterscript
 // is unloaded
@@ -244,24 +239,9 @@ public OnFilterScriptInit()
 	print("\n");
 	print("  |---------------------------------------------------");
 	print("  |--- LS BeachSide Filterscript");
-    print("  |--  Script v1.02");
-    print("  |--  10th February 2015");
+    print("  |--  Script v1.03");
+    print("  |--  19th April 2015");
 	print("  |---------------------------------------------------");
-
-	// Create the LS BeachSide Building object
-    LSBeachSide1Object = CreateObject(19596, 280.297, -1606.2, 72.3984, 0, 0, 0);
-    
-    // Create the LS BeachSide Building interior object
-    LSBeachSide1InteriorObject = CreateObject(19597, 280.297, -1606.2, 72.3984, 0, 0, 0);
-
-    // Display information in the Server Console
-    print("  |--  LS BeachSide Building and Interior objects created");
-    
-    // Create the LS BeachSide underground car park object
-    LSBeachSide1CPObject = CreateObject(19800, 280.297, -1606.2, 22.3984, 0, 0, 0);
-    
-    // Display information in the Server Console
-    print("  |--  LS BeachSide Underground Car Park object created");
 
     // Reset the elevator queue
 	ResetElevatorQueue();
@@ -279,13 +259,12 @@ public OnFilterScriptInit()
         // Check if the player is connected and not a NPC
         if (IsPlayerConnected(i) && !IsPlayerNPC(i))
         {
-            // Remove default GTASA building map object, LOD, night lights and lamp post
-            // (so any player currently ingame does not have to rejoin for them
-			//  to be removed when this filterscript is loaded)
-			RemoveBuildingForPlayer(i, 6391, 280.297, -1606.2, 72.3984, 250.0); // Building
-			RemoveBuildingForPlayer(i, 6394, 280.297, -1606.2, 72.3984, 250.0); // LOD
-			RemoveBuildingForPlayer(i, 6518, 280.297, -1606.2, 72.3984, 250.0); // Night Lights
-			RemoveBuildingForPlayer(i, 1226, 265.481, -1581.1, 32.9311, 5.0); // Lamp Post
+            // Remove the lamp post at the underground car park entrance
+            RemoveBuildingForPlayer(i, 1226, 265.481, -1581.1, 32.9311, 5.0);
+            
+            // Remove the night lights object (must be removed to also remove any
+		    // occulsion zones inside the building)
+		    RemoveBuildingForPlayer(i, 6518, 280.297, -1606.2, 72.3984, 250.0);
         }
     }
 
@@ -295,39 +274,6 @@ public OnFilterScriptInit()
 
 public OnFilterScriptExit()
 {
-    // Check for valid object
-	if (IsValidObject(LSBeachSide1Object))
-	{
-		// Destroy the LS BeachSide Building object
-		DestroyObject(LSBeachSide1Object);
-
-		// Display information in the Server Console
-		print("  |---------------------------------------------------");
-    	print("  |--  LS BeachSide Building object destroyed");
-    }
-    
-    // Check for valid object
-	if (IsValidObject(LSBeachSide1InteriorObject))
-	{
-		// Destroy the LS BeachSide Building Interior object
-		DestroyObject(LSBeachSide1InteriorObject);
-
-		// Display information in the Server Console
-		print("  |---------------------------------------------------");
-    	print("  |--  LS BeachSide Building Interior object destroyed");
-    }
-    
-    // Check for valid object
-	if (IsValidObject(LSBeachSide1CPObject))
-	{
-		// Destroy the LS BeachSide Underground Car Park object
-		DestroyObject(LSBeachSide1CPObject);
-
-		// Display information in the Server Console
-		print("  |---------------------------------------------------");
-    	print("  |--  LS BeachSide Underground Car Park object destroyed");
-    }
-
     // Destroy the elevator, the elevator doors and the elevator floor doors
 	Elevator_Destroy();
 
@@ -341,13 +287,14 @@ public OnFilterScriptExit()
 
 public OnPlayerConnect(playerid)
 {
-    // Remove default GTASA building map object, LOD, night lights and lamp post
-	RemoveBuildingForPlayer(playerid, 6391, 280.297, -1606.2, 72.3984, 250.0); // Building
-	RemoveBuildingForPlayer(playerid, 6394, 280.297, -1606.2, 72.3984, 250.0); // LOD
-	RemoveBuildingForPlayer(playerid, 6518, 280.297, -1606.2, 72.3984, 250.0); // Night Lights
-	RemoveBuildingForPlayer(playerid, 1226, 265.481, -1581.1, 32.9311, 5.0);   // Lamp Post
+    // Remove the lamp post at the underground car park entrance
+    RemoveBuildingForPlayer(playerid, 1226, 265.481, -1581.1, 32.9311, 5.0);
+    
+    // Remove the night lights object (must be removed to also remove any
+    // occulsion zones inside the building)
+    RemoveBuildingForPlayer(playerid, 6518, 280.297, -1606.2, 72.3984, 250.0);
 
-	// Exit here
+	// Exit here (return 1 so this callback is processed in other scripts)
 	return 1;
 }
 

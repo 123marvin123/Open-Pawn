@@ -1,10 +1,22 @@
 enum sv // Enum for the Servervariables
 {
-	MySQLHandle
+	MySQLHandle,
+	svFlags:Flags,
+};
+
+enum svFlags (<<=1)
+{
+	NoConnectionShutDown = 1,
 };
 new ServerVars[sv];
 
 enum
 {
-	DIALOG_INFO
+	#if RELEASE_STATE == DEBUG
+	DIALOG_INFO,
+	#endif
+	
+	DIALOG_REGISTER,
+	DIALOG_LOGIN,
+	DIALOG_LOGIN_INFO
 };

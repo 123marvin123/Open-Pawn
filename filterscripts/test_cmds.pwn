@@ -32,19 +32,20 @@ new edit_objectid = INVALID_OBJECT_ID;
 new vehicleid_tokill = 0;
 
 // For testing text material/texture replacements
-new test_tex_objects[64];
+new test_tex_objects[128];
 new text_counter = 0;
 new text_update_timer = -1;
 new text_update_player = INVALID_PLAYER_ID;
-
-// For testing player textdraws
-new PlayerText:test_player_tds[20];
-new test_player_tds_counter = 0;
 
 forward UnFreezeMe();
 forward ShowTestDialog();
 forward TimedVehicleDeath();
 forward UpdateTextTimer();
+
+#define     AMMUNATION_SMGS_DIALOG      "\
+Weapon\tAmount\tPrice\n\
+{FFFFFF}MP5\t90\t{FF0000}$3500\
+"
 
 //-------------------------------------------------
 
@@ -153,7 +154,7 @@ public UpdateTextTimer()
 	format(textdisp,256,"Dynamic Update (%d)", text_counter);
 	text_counter++;
 	
-	SetObjectMaterialText(test_tex_objects[0], textdisp, 0, OBJECT_MATERIAL_SIZE_512x128, "Courier New", 48, 1, 0xFF000000, 0, 0);
+	SetPlayerObjectMaterialText(text_update_player, test_tex_objects[0], textdisp, 0, OBJECT_MATERIAL_SIZE_512x128, "Courier New", 48, 1, 0xFF000000, 0, 0);
 }
 
 //-------------------------------------------------
@@ -525,6 +526,12 @@ public OnPlayerCommandText(playerid, cmdtext[])
         return 1;
 	}
 
+	if(strcmp(cmd, "/testtablistcrash", true) == 0) {
+		//ShowPlayerDialog(playerid,2,DIALOG_STYLE_TABLIST_HEADERS,"{FFFF00}SMGs", "Weapon\tAmount\tPrice\n{FFFFFF}MP5\t90\t{FF0000}$3500","Buy", "Go Back");
+        ShowPlayerDialog(playerid,2,DIALOG_STYLE_TABLIST_HEADERS,"{FFFF00}SMGs", AMMUNATION_SMGS_DIALOG, "Buy", "Go Back");
+		return 1;
+	}
+	
     if(strcmp(cmd, "/testclosebox", true) == 0) {
 	    ShowPlayerDialog(playerid,-1,0,"","","","");
         return 1;
@@ -1111,13 +1118,16 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		new Float:X, Float:Y, Float:Z;
 		GetPlayerPos(playerid, X, Y, Z);
 		X+=1.0;
-		while(lp != 64) {
+		while(lp != 128) {
 			test_tex_objects[lp] = CreatePlayerObject(playerid,19372,X,Y,Z+0.5,0.0,0.0,0.0,0.0);
+			//SetPlayerObjectMaterial(playerid, test_tex_objects[lp], 0, 0, "null", "null", 0);
+			
 			if(lp % 2 == 0) {
 				SetPlayerObjectMaterial(playerid, test_tex_objects[lp], 0, 19325, "all_walls", "stormdrain3_nt", 0xFF00FF00);
 			} else {
 			    SetPlayerObjectMaterial(playerid, test_tex_objects[lp], 0, 19371, "all_walls", "stormdrain3_nt", 0xFF551155);
 			}
+			
 			X+=2.0;
 			lp++;
 		}
@@ -1129,12 +1139,13 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		GetPlayerPos(playerid, X, Y, Z);
 		X+=1.0;
 		new szId[256+1];
-		while(lp != 64) {
+		while(lp != 128) {
 			test_tex_objects[lp] = CreatePlayerObject(playerid,19371,X,Y,Z+0.5,0.0,0.0,0.0,300.0);
+			//format(szId, 256, "Text Here: {00FF00}%d", lp);
+			//SetPlayerObjectMaterialText(playerid, test_tex_objects[lp], szId, 0, OBJECT_MATERIAL_SIZE_512x512, "Verdana", 60, 1, 0xFF5555FF, 0xFF000000, OBJECT_MATERIAL_TEXT_ALIGN_CENTER);
 			if(lp % 2 == 0) {
 			    SetPlayerObjectMaterial(playerid, test_tex_objects[lp], 0, 19371, "all_walls", "stormdrain3_nt", 0xFF55AA55);
 			} else {
-			    //SetPlayerObjectMaterial(playerid, test_tex_objects[lp], 0, 0, "none", "none", 0);
 			    format(szId, 256, "Text: {00FF00}%d", lp);
 			    SetPlayerObjectMaterialText(playerid, test_tex_objects[lp], szId, 0, OBJECT_MATERIAL_SIZE_512x256, "Verdana", 60, 1, 0xFF5555FF, 0xFF000000, OBJECT_MATERIAL_TEXT_ALIGN_CENTER);
 			}
@@ -1149,7 +1160,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 		GetPlayerPos(playerid, X, Y, Z);
 		X+=1.0;
 		
-		test_tex_objects[0] = CreateObject(19479,X,Y,Z+0.5,0.0,0.0,0.0,300.0);
+		test_tex_objects[0] = CreatePlayerObject(playerid,19479,X,Y,Z+0.5,0.0,0.0,0.0,300.0);
 		SetObjectMaterialText(test_tex_objects[0], "Dynamic Update (0)", 0, OBJECT_MATERIAL_SIZE_512x128, "Courier New", 48, 1, 0xFF000000, 0, 0);
 		X+=3.0;
 		
@@ -1185,7 +1196,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 	
 	if(strcmp(cmd, "/delptex",true) == 0) {
 	    new lp=0;
-		while(lp != 64) {
+		while(lp != 128) {
 			if(IsValidPlayerObject(playerid, test_tex_objects[lp])) {
 				DestroyPlayerObject(playerid, test_tex_objects[lp]);
 			}
@@ -1326,6 +1337,68 @@ public OnPlayerCommandText(playerid, cmdtext[])
         format(msg,sizeof(msg),"VehiclePoolSize: %d", HigestVehicleId);
 		SendClientMessage(playerid, 0xFFFFFFFF, msg);
 		return 1;
+	}
+	
+	if(strcmp(cmd, "/sirenstate", true ) == 0)
+	{
+	    if( GetPlayerVehicleID(playerid) && GetPlayerVehicleID(playerid) != INVALID_VEHICLE_ID &&
+		    GetVehicleParamsSirenState(GetPlayerVehicleID(playerid)) == VEHICLE_PARAMS_ON )
+		{
+		   SendClientMessage(playerid, 0xFFFFFFFF, "Siren is ON");
+	    }
+		else {
+		   SendClientMessage(playerid, 0xFFFFFFFF, "Siren is OFF");
+	    }
+
+	    return 1;
+	}
+
+	if(strcmp(cmd, "/opencardoors", true ) == 0)
+	{
+	    if(GetPlayerVehicleID(playerid) && GetPlayerVehicleID(playerid) != INVALID_VEHICLE_ID)
+		{
+			SetVehicleParamsCarDoors(GetPlayerVehicleID(playerid), VEHICLE_PARAMS_ON, VEHICLE_PARAMS_ON, VEHICLE_PARAMS_ON, VEHICLE_PARAMS_ON);
+	    }
+	    /*
+   		if(GetPlayerCameraTargetVehicle(playerid) != INVALID_VEHICLE_ID)
+		{
+			SetVehicleParamsCarDoors(GetPlayerCameraTargetVehicle(playerid), VEHICLE_PARAMS_ON, VEHICLE_PARAMS_ON, VEHICLE_PARAMS_ON, VEHICLE_PARAMS_ON);
+	    }*/
+
+	    return 1;
+	}
+
+	if(strcmp(cmd, "/closecardoors", true ) == 0)
+	{
+	    if(GetPlayerVehicleID(playerid) && GetPlayerVehicleID(playerid) != INVALID_VEHICLE_ID)
+		{
+			SetVehicleParamsCarDoors(GetPlayerVehicleID(playerid), VEHICLE_PARAMS_OFF, VEHICLE_PARAMS_OFF, VEHICLE_PARAMS_OFF, VEHICLE_PARAMS_OFF);
+	    }
+	    /*
+	    if(GetPlayerCameraTargetVehicle(playerid) != INVALID_VEHICLE_ID)
+		{
+			SetVehicleParamsCarDoors(GetPlayerCameraTargetVehicle(playerid), VEHICLE_PARAMS_OFF, VEHICLE_PARAMS_OFF, VEHICLE_PARAMS_OFF, VEHICLE_PARAMS_OFF);
+	    }*/
+
+ 	    return 1;
+	}
+	
+	if(strcmp(cmd, "/opencarwindows", true ) == 0)
+	{
+	    if(GetPlayerVehicleID(playerid) && GetPlayerVehicleID(playerid) != INVALID_VEHICLE_ID)
+		{
+			SetVehicleParamsCarWindows(GetPlayerVehicleID(playerid), VEHICLE_PARAMS_OFF, VEHICLE_PARAMS_OFF, VEHICLE_PARAMS_OFF, VEHICLE_PARAMS_OFF);
+	    }
+	    return 1;
+	}
+	
+	if(strcmp(cmd, "/closecarwindows", true ) == 0)
+	{
+	    if(GetPlayerVehicleID(playerid) && GetPlayerVehicleID(playerid) != INVALID_VEHICLE_ID)
+		{
+			SetVehicleParamsCarWindows(GetPlayerVehicleID(playerid), VEHICLE_PARAMS_ON, VEHICLE_PARAMS_ON, VEHICLE_PARAMS_ON, VEHICLE_PARAMS_ON);
+	    }
+	    return 1;
 	}
 
   	return 0;
@@ -1672,14 +1745,16 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 {
 	new File:file = fopen("playershots.txt",io_append);
  	new message[256+1];
+ 	new weapname[64+1];
 	
 	if(issuerid != INVALID_PLAYER_ID) {
-		format(message, 256, "PlayerTakeDamage(%d) from Player(%d) (%f) using weapon: %d bodypart: %d\r\n", playerid, issuerid, amount, weaponid, bodypart);
-		//SendClientMessage(playerid, 0xFFFFFFFF, message);
+	    GetWeaponName(weaponid, weapname, 64);
+		format(message, 256, "PlayerTakeDamage(%d) from Player(%d) (%f) weapon: (%s) bodypart: %d\r\n", playerid, issuerid, amount, weapname, bodypart);
+		SendClientMessageToAll(0xFFFFFFFF, message);
 	}
 	else {
 		format(message, 256, "PlayerTakeDamage(%d) (%f) from: %d\r\n", playerid, amount, weaponid);
-		//SendClientMessage(playerid, 0xFFFFFFFF, message);
+		SendClientMessageToAll(0xFFFFFFFF, message);
 	}
 	
 	fwrite(file, message);
@@ -1688,18 +1763,27 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 
 //-------------------------------------------
 // Example of GiveDamage
-
 /*
 public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
 {
 	new File:file = fopen("playershots.txt",io_append);
  	new message[256+1];
+ 	new weapname[64+1];
  	
-	format(message, 256, "PlayerGiveDamage(%d) to Player(%d) (%f) using weapon: %d  bodypart: %d\r\n", playerid, damagedid, amount, weaponid, bodypart);
+    GetWeaponName(weaponid, weapname, 64);
+	format(message, 256, "PlayerGiveDamage(%d) to Player(%d) (%f) weapon: (%s) bodypart: %d\r\n", playerid, damagedid, amount, weapname, bodypart);
 	
 	fwrite(file, message);
 	fclose(file);
-	SendClientMessage(playerid, 0xFFFFFFFF, message);
+	SendClientMessageToAll(0xFFFFFFFF, message);
+}*/
+//-------------------------------------------
+
+/*
+public OnPlayerDeath(playerid, killerid, reason)
+{
+    SendDeathMessage(killerid, playerid, reason);
+    return 1;
 }*/
 
 //-------------------------------------------
