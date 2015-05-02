@@ -11,6 +11,15 @@ public OnPlayerDisconnect(playerid, reason)
 	#endif
 }
 
+SaveSkin(playerid)
+{
+	new str[60];
+	mysql_format(ServerVars[MySQLHandle], str, sizeof(str), "UPDATE `User` SET `Skin` = %d WHERE `uID` = %d LIMIT 1;",
+															cPlayer->Skin[playerid], cPlayer->uID[playerid]);
+	mysql_tquery(ServerVars[MySQLHandle], str);
+	return true;
+}
+
 /* 
  * ---------------------------------------------------------
  * Hooking part

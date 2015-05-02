@@ -42,7 +42,6 @@ Cmd->da(playerid, params[])
 	new actorid;
 	if(sscanf(params, "d", actorid)) return SendClientMessage(playerid, Color(White), "Verwendung: /da [actorid]");
 	if(actorid > MAX_ACTORS) return true;
-	// if(Actor->Flags[actorid] & Valid)
 	if(IsValidActor(actorid))
 	{
 		Delete3DTextLabel(Actor->Label[actorid]);
@@ -54,7 +53,6 @@ Cmd->ha(playerid, params[])
 {
 	new actorid, Float:HealthToSet;
 	if(sscanf(params, "df", actorid, HealthToSet)) return SendClientMessage(playerid, Color(White), "Verwendung: /ha [actorid] [health]");
-	// if(Actor->Flags[actorid] & Valid)
 	if(IsValidActor(actorid))
 	{
 		SetActorHealth(actorid, HealthToSet);
@@ -87,5 +85,14 @@ Cmd->wep(playerid, params[])
 	if(sscanf(params,"ii",Wep, Amo)) return SendClientMessage(playerid,-1, "Verwendung: /wep [weapon] [ammo]");
 	ResetPlayerWeapons(playerid);
 	GivePlayerWeapon(playerid, Wep, Amo);
+	return true;
+}
+
+Cmd->jet(playerid, params[])
+{
+	if(!IsPlayerInAnyVehicle(playerid))
+	{
+		SetPlayerSpecialAction(playerid, ((GetPlayerSpecialAction(playerid) == SPECIAL_ACTION_USEJETPACK) ? SPECIAL_ACTION_NONE : SPECIAL_ACTION_USEJETPACK));
+	}	
 	return true;
 }

@@ -27,7 +27,7 @@ public OnPlayerConnect(playerid)
 {
 	GetPlayerName(playerid, cPlayer->cName[playerid], MAX_PLAYER_NAME);
 	cPlayer->cFlags[playerid] &= ~Logedin; // Turn of the Loginflag
-	
+	SetPlayerVirtualWorld(playerid, playerid + 1);
 	#if defined Login_OnPlayerConnect
 		return Login_OnPlayerConnect(playerid);
 	#else
@@ -40,6 +40,10 @@ public OnPlayerRequestClass(playerid, classid)
 	//Skip ClassSelection
 	SetSpawnInfo(playerid, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	SpawnPlayer(playerid);
+	
+	new str[90];
+	mysql_format(ServerVars[MySQLHandle], str, sizeof(str), "SELECT `uID`, `Skin` FROM `User` WHERE `Name` = '%e' LIMIT 1;", cPlayer->cName[playerid]);
+	mysql_pquery(ServerVars[MySQLHandle], str, "OnPlayerAccountCheck", "d", playerid);
 	
 	#if defined Login_OnPlayerRequestClass
 		return Login_OnPlayerRequestClass(playerid, classid);
@@ -61,6 +65,14 @@ public OnPlayerLogin(playerid)
 		cache_delete(result);
 		SetPlayerPos(playerid, constPlayer[playerid][Cord][0], constPlayer[playerid][Cord][1], constPlayer[playerid][Cord][2]);
 		cPlayer->cFlags[playerid] |= LoginDone;
+		
+		DestroyActor(cPlayer->ActorID[playerid]);
+		
+		TogglePlayerSpectating(playerid, false);
+		DestroyPlayerObject(playerid, cPlayer->CamObj[playerid]);
+		SetCameraBehindPlayer(playerid);
+		
+		SetPlayerVirtualWorld(playerid, 0);
 	}
 	else Kick(playerid);
 	return true;
@@ -79,8 +91,16 @@ public OnPlayerSpawn(playerid)
 								  Schließlich handelt es sich hierbei um ein Open Source Script.", cPlayer->cName[playerid]);
 		ShowPlayerDialog(playerid, DIALOG_INFO, DIALOG_STYLE_MSGBOX, "Willkommen", str, "OK", "");
 		#endif
-		mysql_format(ServerVars[MySQLHandle], str, sizeof(str), "SELECT `uID`, `Skin` FROM `User` WHERE `Name` = '%e' LIMIT 1;", cPlayer->cName[playerid]);
-		mysql_pquery(ServerVars[MySQLHandle], str, "OnPlayerAccountCheck", "d", playerid);
+		
+		cPlayer->CamObj[playerid] = CreatePlayerObject(playerid, 19300, -2381.091308, 2196.152832, 15.140089, 0.0, 0.0, 0.0);
+		TogglePlayerSpectating(playerid, true);
+		AttachCameraToPlayerObject(playerid, cPlayer->CamObj[playerid]);
+		
+		SetPlayerCameraPos(playerid, -2381.091308, 2196.152832, 15.140089);
+		// SetPlayerCameraLookAt(playerid, -2381.069580, 2197.149902, 15.067562);
+		SetPlayerCameraLookAt(playerid, -2381.4136, 2212.6426, 12.8594);
+		
+		return true; // just returning - not calling the other Hooked Callbacks
 	}
 	#if defined Login_OnPlayerSpawn
 		return Login_OnPlayerSpawn(playerid);
@@ -184,7 +204,10 @@ public OnPlayerAccountCheck(playerid)
 {
 	cPlayer->uID[playerid] = cache_get_row_int(0, 0, ServerVars[MySQLHandle]); // 0 = uID
 	cPlayer->Skin[playerid] = cache_get_row_int(0, 1, ServerVars[MySQLHandle]); // 1 = Skin
-	SetPlayerSkin(playerid, cPlayer->Skin[playerid]);
+	// SetPlayerSkin(playerid, cPlayer->Skin[playerid]);
+	
+	cPlayer->ActorID[playerid] = CreateActor(cPlayer->Skin[playerid], -2381.4136, 2212.6426, 12.8594, 180.0);
+	SetActorVirtualWorld(cPlayer->ActorID[playerid], playerid + 1);
 	
 	#if RELEASE_STATE == RELEASE
 	new str[300];	

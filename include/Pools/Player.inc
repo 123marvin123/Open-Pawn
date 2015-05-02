@@ -4,6 +4,8 @@ enum constantvars
 	cName[MAX_PLAYER_NAME],
 	Skin,
 	Float:Cord[3],
+	ActorID,
+	CamObj,
 	constantflags:cFlags
 };
 

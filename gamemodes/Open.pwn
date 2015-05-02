@@ -13,18 +13,15 @@ public OnGameModeInit()
 {
 	SetGameModeText(MODE);
 	UsePlayerPedAnims();
-	return 1;
+	return true;
 }
 
 public OnPlayerSpawn(playerid)
 {
-	if(cPlayer->cFlags[playerid] & LoginDone)
-	{
-		SetPlayerPos(playerid, -2248.2258,2330.5852,4.9741);
-		SetPlayerFacingAngle(playerid, 55.0);
-		SetCameraBehindPlayer(playerid);
-	}
-	return 1;
+	SetPlayerPos(playerid, -2248.2258,2330.5852,4.9741);
+	SetPlayerFacingAngle(playerid, 55.0);
+	SetCameraBehindPlayer(playerid);
+	return true;
 }
 
 public OnPlayerUpdate(playerid)
@@ -42,6 +39,6 @@ public OnPlayerGiveDamageActor(playerid, damaged_actorid, Float:amount, weaponid
 	{
 		new Float:Health;
 		GetActorHealth(damaged_actorid, Health);
-		if(Health < 1) ReSpawnActor(damaged_actorid);
+		if(Health < 1) RespawnActor(damaged_actorid);
 	}
 }

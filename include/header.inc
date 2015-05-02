@@ -55,17 +55,18 @@
  * ---------------------------------------------------------
  */
 
-#include <../../include/Systems/Hooks/ActorHooks>
- 
+#include <../../include/Hooks/ActorHooks>
+#include <../../include/Hooks/PlayerHooks>
+
 /*
  * ---------------------------------------------------------
  * Variables und Info Part
  * ---------------------------------------------------------
  */
- 
- #if RELEASE_STATE == DEBUG
- #include <../../include/CMDs/DebugCMDs>
- #endif
+
+#if RELEASE_STATE == DEBUG
+	#include <../../include/CMDs/DebugCMDs>
+#endif
  
 /*
  * ---------------------------------------------------------
@@ -81,4 +82,4 @@
  * ---------------------------------------------------------
  */
  
-#include <../../include/Systems/Saveing/PlayerSave>
+#include <../../include/Saveing/PlayerSave>
