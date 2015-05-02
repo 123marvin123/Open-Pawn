@@ -41,4 +41,5 @@ public OnPlayerGiveDamageActor(playerid, damaged_actorid, Float:amount, weaponid
 		GetActorHealth(damaged_actorid, Health);
 		if(Health < 1) RespawnActor(damaged_actorid);
 	}
+	return true;
 }
