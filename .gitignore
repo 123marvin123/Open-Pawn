@@ -54,3 +54,5 @@ include/Backups/
 #unwanted .inc
 mysql_data.inc
 *.xml
+*.lst
+*.tde

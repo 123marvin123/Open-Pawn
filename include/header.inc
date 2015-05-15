@@ -75,6 +75,7 @@
  */
  
 #include <../../include/Systems/Login>
+#include <../../include/Systems/GlobalTextdrawHandler>
 
 /*
  * ---------------------------------------------------------

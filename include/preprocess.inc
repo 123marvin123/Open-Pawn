@@ -2,6 +2,8 @@
 
 #define isnull(%1)  		((%1[0] == 0) || (%1[0] == 1 && %1[1] == 0))
 
+#define MAX_SKINS			311
+
 /*
  * ----------------------------------------
  * Variables Restructure

@@ -24,16 +24,20 @@ __DestroyActor(actorid)
 	return _DestroyActor(actorid);
 }
 
-RespawnActor(actorid)
+RespawnActor(actorid, model = -1)
 {
 	if(IsValidActor(actorid))
 	{
-		new Float:Pos[4];
+		new Float:Pos[4], world;
 		GetActorPos(actorid, Pos[0], Pos[1], Pos[2]);
 		GetActorFacingAngle(actorid, Pos[3]);
+		
+		world = GetActorVirtualWorld(actorid);
+		
 		_DestroyActor(actorid);
-		CreateActor(Actor->Model[actorid], Pos[0], Pos[1], Pos[2], Pos[3]);
-		return true;
+		actorid = CreateActor((model == -1) ? (Actor->Model[actorid]) : (model), Pos[0], Pos[1], Pos[2], Pos[3]);
+		SetActorVirtualWorld(actorid, world);
+		return actorid;
 	}
-	return false;
+	return INVALID_ACTOR_ID;
 }

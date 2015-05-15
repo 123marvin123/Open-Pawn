@@ -13,6 +13,8 @@ public OnGameModeInit()
 {
 	SetGameModeText(MODE);
 	UsePlayerPedAnims();
+	
+	InitRegistrationDraws();
 	return true;
 }
 

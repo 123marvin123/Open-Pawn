@@ -8,7 +8,7 @@ enum ActorStruct
 };
 /*enum aFlags (<<= 1)
 {
-	Valid = 1,
+
 };*/
 
 new Actors[MAX_ACTORS][ActorStruct];

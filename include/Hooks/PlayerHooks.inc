@@ -14,9 +14,8 @@ native _SetPlayerSkin(playerid, skinid) = SetPlayerSkin;
  * ----------------------------------------
  */
  
-__SetPlayerSkin(playerid, skinid, save = true)
+__SetPlayerSkin(playerid, skinid)
 {
-	if(save) SaveSkin(playerid);
 	cPlayer->Skin[playerid] = skinid;
 	return _SetPlayerSkin(playerid, skinid);
 }
