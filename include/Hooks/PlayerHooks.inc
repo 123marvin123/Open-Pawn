@@ -17,5 +17,6 @@ native _SetPlayerSkin(playerid, skinid) = SetPlayerSkin;
 __SetPlayerSkin(playerid, skinid)
 {
 	cPlayer->Skin[playerid] = skinid;
+	printf("SkinID: %d", skinid);
 	return _SetPlayerSkin(playerid, skinid);
 }

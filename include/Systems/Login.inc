@@ -43,7 +43,7 @@ public OnPlayerConnect(playerid)
 public OnPlayerRequestClass(playerid, classid)
 {
 	//Skip ClassSelection
-	SetSpawnInfo(playerid, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	SetSpawnInfo(playerid, 0, 0, -2248.2258, 2330.5852, 4.9741, 55.0, 0, 0, 0, 0, 0, 0);
 	SpawnPlayer(playerid);
 	
 	new str[90];
@@ -68,6 +68,8 @@ public OnPlayerLogin(playerid)
 		constPlayer[playerid][Cord][1] = cache_get_field_content_float(0, "PosY", ServerVars[MySQLHandle]);
 		constPlayer[playerid][Cord][2] = cache_get_field_content_float(0, "PosZ", ServerVars[MySQLHandle]);
 		cache_delete(result);
+
+		SpawnPlayer(playerid);
 		SetPlayerPos(playerid, constPlayer[playerid][Cord][0], constPlayer[playerid][Cord][1], constPlayer[playerid][Cord][2]);
 		cPlayer->cFlags[playerid] |= LoginDone;
 		
@@ -76,8 +78,6 @@ public OnPlayerLogin(playerid)
 		
 		SetPlayerVirtualWorld(playerid, 0);
 		SetPlayerSkin(playerid, cPlayer->Skin[playerid]);
-		
-		printf("Skin: %d", cPlayer->Skin[playerid]);
 		
 		if(cPlayer->cFlags[playerid] & NoSkin)
 		{
@@ -258,7 +258,8 @@ public OnPlayerAccountCheck(playerid)
 	SetActorVirtualWorld(cPlayer->ActorID[playerid], playerid + 1);
 	
 	#if RELEASE_STATE == RELEASE
-	new str[300];	
+	new str[300];
+	if(isnull(cPlayer->cName[playerid])) return Kick(playerid);
 	if(cPlayer->uID[playerid])
 	{
 		format(str, sizeof(str), "Herzlich Willkommen %s,\n\
@@ -313,13 +314,13 @@ public OnPlayerRegister(playerid)
 		ResetSkinPreview(playerid);		
 		HideRegisterDraws(playerid);
 		
-		SetPlayerSkin(playerid, cPlayer->Skin[playerid]);
-		
 		new rand = random(sizeof(Spawns));
 		SetPlayerPos(playerid, Spawns[rand][sX], Spawns[rand][sY], Spawns[rand][sZ]);
 		SetPlayerFacingAngle(playerid, Spawns[rand][sAngle]);
 		SetCameraBehindPlayer(playerid);
-			
+		
+		SetPlayerSkin(playerid, cPlayer->Skin[playerid]);
+		
 		TextDrawHideForPlayer(playerid, ServerVars[RegisterArrow][0]);
 		TextDrawHideForPlayer(playerid, ServerVars[RegisterArrow][1]);
 		TextDrawHideForPlayer(playerid, ServerVars[Done][0]);
