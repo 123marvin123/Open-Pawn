@@ -42,10 +42,6 @@ public OnPlayerConnect(playerid)
 
 public OnPlayerRequestClass(playerid, classid)
 {
-	//Skip ClassSelection
-	SetSpawnInfo(playerid, 0, 0, -2248.2258, 2330.5852, 4.9741, 55.0, 0, 0, 0, 0, 0, 0);
-	SpawnPlayer(playerid);
-	
 	new str[90];
 	mysql_format(ServerVars[MySQLHandle], str, sizeof(str), "SELECT `uID`, `Skin` FROM `User` WHERE `Name` = '%e' LIMIT 1;", cPlayer->cName[playerid]);
 	mysql_pquery(ServerVars[MySQLHandle], str, "OnPlayerAccountCheck", "d", playerid);
@@ -77,7 +73,6 @@ public OnPlayerLogin(playerid)
 		cPlayer->ActorID[playerid] = INVALID_ACTOR_ID;
 		
 		SetPlayerVirtualWorld(playerid, 0);
-		SetPlayerSkin(playerid, cPlayer->Skin[playerid]);
 		
 		if(cPlayer->cFlags[playerid] & NoSkin)
 		{
@@ -254,6 +249,11 @@ public OnPlayerAccountCheck(playerid)
 		cPlayer->Skin[playerid] = 0;
 	}
 	
+	//Skip ClassSelection
+	SetSpawnInfo(playerid, 0, cPlayer->Skin[playerid], -2248.2258, 2330.5852, 4.9741, 55.0, 0, 0, 0, 0, 0, 0);
+	SpawnPlayer(playerid);
+	
+	// Actor stuff
 	cPlayer->ActorID[playerid] = CreateActor(cPlayer->Skin[playerid], -2381.4136, 2212.6426, 12.8594, 180.0);
 	SetActorVirtualWorld(cPlayer->ActorID[playerid], playerid + 1);
 	
@@ -314,12 +314,13 @@ public OnPlayerRegister(playerid)
 		ResetSkinPreview(playerid);		
 		HideRegisterDraws(playerid);
 		
+		SetSpawnInfo(playerid, 0, cPlayer->Skin[playerid], -2248.2258, 2330.5852, 4.9741, 55.0, 0, 0, 0, 0, 0, 0);
+		SpawnPlayer(playerid);
+		
 		new rand = random(sizeof(Spawns));
 		SetPlayerPos(playerid, Spawns[rand][sX], Spawns[rand][sY], Spawns[rand][sZ]);
 		SetPlayerFacingAngle(playerid, Spawns[rand][sAngle]);
-		SetCameraBehindPlayer(playerid);
-		
-		SetPlayerSkin(playerid, cPlayer->Skin[playerid]);
+		SetCameraBehindPlayer(playerid);		
 		
 		TextDrawHideForPlayer(playerid, ServerVars[RegisterArrow][0]);
 		TextDrawHideForPlayer(playerid, ServerVars[RegisterArrow][1]);
