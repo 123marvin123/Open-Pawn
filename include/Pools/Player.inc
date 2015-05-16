@@ -1,4 +1,4 @@
-enum constantvars
+enum const_struc
 {
 	uID,
 	cName[MAX_PLAYER_NAME],
@@ -6,12 +6,13 @@ enum constantvars
 	Float:Cord[3],
 	ActorID,
 	CamObj,
-	constantflags:cFlags
+	const_flags:cFlags
 };
 
-enum constantflags (<<= 1)
+enum const_flags (<<= 1)
 {
 	Logedin = 1,
-	LoginDone
+	LoginDone,
+	NoSkin
 };
-new constPlayer[MAX_PLAYERS][constantvars];
+new constPlayer[MAX_PLAYERS][const_struc];
