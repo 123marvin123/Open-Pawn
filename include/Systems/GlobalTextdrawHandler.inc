@@ -51,7 +51,7 @@ public OnPlayerClickTextDraw(playerid, Text:clickedid)
 	}
 	else if(clickedid == ServerVars[Done][0])
 	{
-		SetPlayerSkin(playerid, cPlayer->Skin[playerid]);
+		SetSpawnInfo(playerid, 0, cPlayer->Skin[playerid], 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 		SaveSkin(playerid);
 		
 		cPlayer->cFlags[playerid] |= Logedin;

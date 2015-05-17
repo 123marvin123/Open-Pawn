@@ -22,7 +22,7 @@ public OnPlayerSpawn(playerid)
 {
 	if(cPlayer->cFlags[playerid] & LoginDone)
 	{
-		SetPlayerPos(playerid, -2248.2258,2330.5852,4.9741);
+		SetPlayerPos(playerid, -2248.2258, 2330.5852, 4.9741);
 		SetPlayerFacingAngle(playerid, 55.0);
 		SetCameraBehindPlayer(playerid);
 	}

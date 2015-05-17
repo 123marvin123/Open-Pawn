@@ -96,3 +96,8 @@ Cmd->jet(playerid, params[])
 	}	
 	return true;
 }
+Cmd->carry(playerid, params[])
+{
+	SetPlayerSpecialAction(playerid, SPECIAL_ACTION_CARRY);
+	return true;
+}

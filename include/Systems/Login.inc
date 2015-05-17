@@ -314,9 +314,6 @@ public OnPlayerRegister(playerid)
 		ResetSkinPreview(playerid);		
 		HideRegisterDraws(playerid);
 		
-		SetSpawnInfo(playerid, 0, cPlayer->Skin[playerid], -2248.2258, 2330.5852, 4.9741, 55.0, 0, 0, 0, 0, 0, 0);
-		SpawnPlayer(playerid);
-		
 		new rand = random(sizeof(Spawns));
 		SetPlayerPos(playerid, Spawns[rand][sX], Spawns[rand][sY], Spawns[rand][sZ]);
 		SetPlayerFacingAngle(playerid, Spawns[rand][sAngle]);
