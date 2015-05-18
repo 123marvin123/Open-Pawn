@@ -101,3 +101,25 @@ Cmd->carry(playerid, params[])
 	SetPlayerSpecialAction(playerid, SPECIAL_ACTION_CARRY);
 	return true;
 }
+Cmd->streamskintest(playerid, params[])
+{
+	cPlayer->CamObj[playerid] = CreatePlayerObject(playerid, 19300, -2381.091308, 2196.152832, 15.140089, 0.0, 0.0, 0.0);
+	TogglePlayerSpectating(playerid, true);
+	AttachCameraToPlayerObject(playerid, cPlayer->CamObj[playerid]);
+	MovePlayerObject(playerid, cPlayer->CamObj[playerid], 0, 0, 0, 150);
+	new rand = random(MAX_SKINS);
+	SetPlayerSkin(playerid, rand);
+	printf("SkinID: %d", rand);
+	return true;
+}
+
+public OnPlayerObjectMoved(playerid, objectid)
+{
+	if(objectid == cPlayer->CamObj[playerid] && cPlayer->cFlags[playerid] & LoginDone)
+	{
+		DestroyPlayerObject(playerid, cPlayer->CamObj[playerid]);
+		TogglePlayerSpectating(playerid, false);
+		SetCameraBehindPlayer(playerid);
+	}
+	return true;
+}
