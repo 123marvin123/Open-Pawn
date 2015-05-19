@@ -11,6 +11,19 @@ public OnPlayerDisconnect(playerid, reason)
 	#endif
 }
 
+public OnPlayerUpdate(playerid)
+{
+	if((cPlayer->cFlags[playerid] & Logedin) && (cPlayer->cFlags[playerid] & LoginDone))
+	{
+		GetPlayerPos(playerid, cPlayer->Cord[0][playerid], cPlayer->Cord[1][playerid], cPlayer->Cord[2][playerid]);
+	}
+	#if defined PlayerSave_OnPlayerUpdate
+		return PlayerSave_OnPlayerUpdate(playerid);
+	#else
+		return true;
+	#endif
+}
+
 SaveSkin(playerid)
 {
 	new str[60];
@@ -27,7 +40,7 @@ SaveSkin(playerid)
  */
 
 #if defined PlayerSave_OnPlayerDisconnect
-forward PlayerSave_OnPlayerDisconnect(playerid);
+forward PlayerSave_OnPlayerDisconnect(playerid, reason);
 #endif
 #if defined _ALS_OnPlayerDisconnect
 	#undef OnPlayerDisconnect
@@ -35,3 +48,13 @@ forward PlayerSave_OnPlayerDisconnect(playerid);
 		#define _ALS_OnPlayerDisconnect
 #endif
 #define OnPlayerDisconnect PlayerSave_OnPlayerDisconnect
+
+#if defined PlayerSave_OnPlayerUpdate
+forward PlayerSave_OnPlayerUpdate(playerid);
+#endif
+#if defined _ALS_OnPlayerUpdate
+	#undef OnPlayerUpdate
+	#else
+		#define _ALS_OnPlayerUpdate
+#endif
+#define OnPlayerUpdate PlayerSave_OnPlayerUpdate

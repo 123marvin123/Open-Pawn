@@ -75,7 +75,15 @@
  */
  
 #include <../../include/Systems/Login>
-#include <../../include/Systems/GlobalTextdrawHandler>
+
+/*
+ * ---------------------------------------------------------
+ * Handles Part
+ * ---------------------------------------------------------
+ */
+
+#include <../../include/Handle/GlobalTextdrawHandler>
+#include <../../include/Handle/ActorHandler>
 
 /*
  * ---------------------------------------------------------
