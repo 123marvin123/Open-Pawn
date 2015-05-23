@@ -109,7 +109,6 @@ Cmd->streamskintest(playerid, params[])
 	MovePlayerObject(playerid, cPlayer->CamObj[playerid], 0, 0, 0, 150);
 	new rand = random(MAX_SKINS);
 	SetPlayerSkin(playerid, rand);
-	printf("SkinID: %d", rand);
 	return true;
 }
 
@@ -120,6 +119,21 @@ public OnPlayerObjectMoved(playerid, objectid)
 		DestroyPlayerObject(playerid, cPlayer->CamObj[playerid]);
 		TogglePlayerSpectating(playerid, false);
 		SetCameraBehindPlayer(playerid);
+		return true;
 	}
-	return true;
+	#if defined DCMDs_OnPlayerObjectMoved
+		return DCMDs_OnPlayerObjectMoved(playerid, objectid);
+	#else
+		return true;
+	#endif
 }
+
+#if defined DCMDs_OnPlayerObjectMoved
+forward DCMDs_OnPlayerObjectMoved(playerid, objectid);
+#endif
+#if defined _ALS_OnPlayerObjectMoved
+	#undef OnPlayerObjectMoved
+	#else
+		#define _ALS_OnPlayerObjectMoved
+#endif
+#define OnPlayerObjectMoved DCMDs_OnPlayerObjectMoved

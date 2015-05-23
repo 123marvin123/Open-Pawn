@@ -24,7 +24,18 @@ forward OnPasswordChecked(playerid);
  * Login System
  * ---------------------------------------------------------
  */
- 
+
+public OnGameModeInit()
+{
+	InitRegistrationDraws();
+	
+	#if defined Login_OnGameModeInit
+		return Login_OnGameModeInit();
+	#else
+		return true;
+	#endif
+} 
+
 public OnPlayerConnect(playerid)
 {
 	for(new i; i != _:const_struc; i++) cPlayer->const_struc:i[playerid] = 0;
@@ -103,6 +114,7 @@ public OnPlayerSpawn(playerid)
 		#endif
 		
 		cPlayer->CamObj[playerid] = CreatePlayerObject(playerid, 19300, -2381.091308, 2196.152832, 15.140089, 0.0, 0.0, 0.0);
+		
 		TogglePlayerSpectating(playerid, true);
 		AttachCameraToPlayerObject(playerid, cPlayer->CamObj[playerid]);
 		
@@ -189,6 +201,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				else Kick(playerid);
 			}
 			else Kick(playerid);
+			return true;
 		}
 		case DIALOG_LOGIN_INFO:
 		{
@@ -204,6 +217,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 					OnPlayerLogin(playerid);
 				}
 			}
+			return true;
 		}
 	}
 	#if defined Login_OnDialogResponse
@@ -227,6 +241,10 @@ public OnPlayerDisconnect(playerid, reason)
 }
 public OnPasswordHashed(playerid)
 {
+	#if RELEASE_STATE == DEBUG
+	if(!strcmp("Test", cPlayer->cName[playerid])) return true;
+	#endif
+	
 	new hash[BCRYPT_HASH_LENGTH];
 	bcrypt_get_hash(hash);
 	new query[300];
@@ -327,13 +345,55 @@ public OnPlayerRegister(playerid)
 	return true;
 }
 
+public OnPlayerClickTextDraw(playerid, Text:clickedid)
+{
+	if(clickedid == Text:INVALID_TEXT_DRAW && (!(cPlayer->cFlags[playerid] & Logedin)))
+	{
+		SelectTextDraw(playerid, Color(CadetBlue));
+		return true;
+	}
+	else if(clickedid == ServerVars[RegisterArrow][0])
+	{
+		cPlayer->Skin[playerid] = ((cPlayer->Skin[playerid] + 1) > MAX_SKINS) ? (0) : (cPlayer->Skin[playerid] + 1);
+		cPlayer->ActorID[playerid] = RespawnActor(cPlayer->ActorID[playerid], cPlayer->Skin[playerid]);
+		return true;
+	}
+	else if(clickedid == ServerVars[RegisterArrow][1])
+	{
+		cPlayer->Skin[playerid] = ((cPlayer->Skin[playerid] - 1) < 0) ? (MAX_SKINS) : (cPlayer->Skin[playerid] - 1);
+		cPlayer->ActorID[playerid] = RespawnActor(cPlayer->ActorID[playerid], cPlayer->Skin[playerid]);
+		return true;
+	}
+	else if(clickedid == ServerVars[Done][0])
+	{
+		SetSpawnInfo(playerid, 0, cPlayer->Skin[playerid], 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+		SaveSkin(playerid);
+		
+		cPlayer->cFlags[playerid] |= Logedin;
+		if(!(cPlayer->cFlags[playerid] & NoSkin))
+		{
+			OnPlayerRegister(playerid);
+		}
+		else
+		{
+			OnPlayerLogin(playerid);
+		}
+		return true;
+	}
+	#if defined Login_OnPlayerClickTextDraw
+		return Login_OnPlayerClickTextDraw(playerid, clickedid);
+	#else
+		return true;
+	#endif 
+}
+
 static SkinSelectZoom(playerid)
 {
 	new Float:Pos[3];
 	GetPlayerCameraPos(playerid, Pos[0], Pos[1], Pos[2]);
-	InterpolateCameraPos(playerid, Pos[0], Pos[1], Pos[2], Pos[0], Pos[1] + 8.5, Pos[2] - 0.8513, 2000);
-	
-	SetTimerEx("ShowRegisterDraws", 2000, false, "d", playerid);
+	MovePlayerObject(playerid, cPlayer->CamObj[playerid], Pos[0], Pos[1] + 8.5, Pos[2] - 0.8513, 4.17);
+	AttachCameraToPlayerObject(playerid, cPlayer->CamObj[playerid]);
+	cPlayer->cFlags[playerid] |= SelectZoom;
 	return true;
 }
 
@@ -343,6 +403,7 @@ static ResetSkinPreview(playerid)
 	TogglePlayerSpectating(playerid, false);
 	DestroyPlayerObject(playerid, cPlayer->CamObj[playerid]);
 	SetCameraBehindPlayer(playerid);
+	return true;
 }
 
 static HideRegisterDraws(playerid)
@@ -354,9 +415,42 @@ static HideRegisterDraws(playerid)
 	return true;
 }
 
+static InitRegistrationDraws()
+{
+	ServerVars[RegisterArrow][0] = TextDrawCreate(333.0, 241.0, ">>");
+	TextDrawLetterSize(ServerVars[RegisterArrow][0], 0.47, 2.9);
+	TextDrawSetShadow(ServerVars[RegisterArrow][0], 0);
+	TextDrawUseBox(ServerVars[RegisterArrow][0], 1);
+	TextDrawBoxColor(ServerVars[RegisterArrow][0], 0);
+	TextDrawTextSize(ServerVars[RegisterArrow][0], 355.0, 15.0);
+	TextDrawSetSelectable(ServerVars[RegisterArrow][0], 1);
+
+	ServerVars[RegisterArrow][1] = TextDrawCreate(267.0, 241.0, "<<");
+	TextDrawLetterSize(ServerVars[RegisterArrow][1], 0.47, 2.9);
+	TextDrawSetShadow(ServerVars[RegisterArrow][1], 0);
+	TextDrawUseBox(ServerVars[RegisterArrow][1], 1);
+	TextDrawBoxColor(ServerVars[RegisterArrow][1], 0);
+	TextDrawTextSize(ServerVars[RegisterArrow][1], 289.000000, 15.000000);
+	TextDrawSetSelectable(ServerVars[RegisterArrow][1], 1);
+	
+	ServerVars[Done][0] = TextDrawCreate(287.0, 156.0, "Los geht's");
+	TextDrawLetterSize(ServerVars[Done][0], 0.29, 2.0);
+	TextDrawSetShadow(ServerVars[Done][0], 0);
+	TextDrawUseBox(ServerVars[Done][0], 1);
+	TextDrawBoxColor(ServerVars[Done][0], 0);
+	TextDrawTextSize(ServerVars[Done][0], 337.0, 15.0);
+	TextDrawSetSelectable(ServerVars[Done][0], 1);
+
+	ServerVars[Done][1] = TextDrawCreate(275.0, 172.0, ".");
+	TextDrawLetterSize(ServerVars[Done][1], 6.93, 0.7);
+	TextDrawSetOutline(ServerVars[Done][1], 0);
+	TextDrawSetShadow(ServerVars[Done][1], 0);
+	return true;
+}
+
 public ShowRegisterDraws(playerid)
 {
-	SelectTextDraw(playerid, Color(Aquamarine));
+	SelectTextDraw(playerid, Color(CadetBlue));
 	TextDrawShowForPlayer(playerid, ServerVars[RegisterArrow][0]);
 	TextDrawShowForPlayer(playerid, ServerVars[RegisterArrow][1]);
 	TextDrawShowForPlayer(playerid, ServerVars[Done][0]);
@@ -364,12 +458,38 @@ public ShowRegisterDraws(playerid)
 	
 	return true;
 }
+
+public OnPlayerObjectMoved(playerid, objectid)
+{
+	if(objectid == cPlayer->CamObj[playerid] && cPlayer->cFlags[playerid] & SelectZoom)
+	{
+		ShowRegisterDraws(playerid);
+		cPlayer->cFlags[playerid] &= ~SelectZoom;
+		return true;
+	}
+	#if defined Login_OnPlayerObjectMoved
+		return Login_OnPlayerObjectMoved(playerid, objectid);
+	#else
+		return true;
+	#endif
+}
+
 /* 
  * ---------------------------------------------------------
  * Hooking part
  * ---------------------------------------------------------
  */
-
+ 
+ #if defined Login_OnGameModeInit
+forward Login_OnGameModeInit();
+#endif
+#if defined _ALS_OnGameModeInit
+	#undef OnGameModeInit
+	#else
+		#define _ALS_OnGameModeInit
+#endif
+#define OnGameModeInit Login_OnGameModeInit
+ 
 #if defined Login_OnPlayerConnect
 forward Login_OnPlayerConnect(playerid);
 #endif
@@ -419,3 +539,23 @@ forward Login_OnDialogResponse(playerid, dialogid, response, listitem, inputtext
 		#define _ALS_OnDialogResponse
 #endif
 #define OnDialogResponse Login_OnDialogResponse
+
+#if defined Login_OnPlayerClickTextDraw
+forward Login_OnPlayerClickTextDraw(playerid, Text:clickedid);
+#endif
+#if defined _ALS_OnPlayerClickTextDraw
+	#undef OnPlayerClickTextDraw
+	#else
+		#define _ALS_OnPlayerClickTextDraw
+#endif
+#define OnPlayerClickTextDraw Login_OnPlayerClickTextDraw
+
+#if defined Login_OnPlayerObjectMoved
+forward Login_OnPlayerObjectMoved(playerid, objectid);
+#endif
+#if defined _ALS_OnPlayerObjectMoved
+	#undef OnPlayerObjectMoved
+	#else
+		#define _ALS_OnPlayerObjectMoved
+#endif
+#define OnPlayerObjectMoved Login_OnPlayerObjectMoved

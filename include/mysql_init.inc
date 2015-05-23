@@ -1,5 +1,6 @@
 public OnGameModeInit()
 {
+	print("----------------------------------");
 	print("Initializing MySQL Connection\n");
 	
 	mysql_log(LOG_ALL);
@@ -17,7 +18,8 @@ public OnGameModeInit()
 	print("Connection successfull");
 	
 	mysql_log(LOG_ALL);
-	print("\nMySQL Connection initialized\n");
+	print("\nMySQL Connection initialized");
+	print("----------------------------------");
 	
 	#if defined mysql_OnGameModeInit
 		return mysql_OnGameModeInit();
@@ -54,7 +56,7 @@ public ShuttingDown()
  */
 
 #if defined mysql_OnGameModeInit
-forward mysql_OnGameModeInit();
+	forward mysql_OnGameModeInit();
 #endif
 #if defined _ALS_OnGameModeInit
 	#undef OnGameModeInit

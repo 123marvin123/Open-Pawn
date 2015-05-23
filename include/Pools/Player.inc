@@ -13,6 +13,7 @@ enum const_flags (<<= 1)
 {
 	Logedin = 1,
 	LoginDone,
-	NoSkin
+	NoSkin,
+	SelectZoom
 };
 new constPlayer[MAX_PLAYERS][const_struc];

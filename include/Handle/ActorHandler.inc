@@ -21,4 +21,4 @@ forward AHandle_OnPlayerGiveDamageActor(playerid, damaged_actorid, Float:amount,
 	#else
 		#define _ALS_OnPlayerGiveDamageActor
 #endif
-#define OnPlayerGiveDamageActor AHandler_OnPlayerGiveDamageActor
+#define OnPlayerGiveDamageActor AHandle_OnPlayerGiveDamageActor

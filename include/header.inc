@@ -82,7 +82,7 @@
  * ---------------------------------------------------------
  */
 
-#include <../../include/Handle/GlobalTextdrawHandler>
+// #include <../../include/Handle/GlobalTextdrawHandler> Currently empty
 #include <../../include/Handle/ActorHandler>
 
 /*
