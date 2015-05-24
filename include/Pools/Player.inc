@@ -12,7 +12,8 @@ enum const_struc
 	Float:Cord[4],
 	ActorID,
 	CamObj,
-	const_flags:cFlags
+	const_flags:cFlags,
+	adminRank
 };
 
 enum const_flags (<<= 1)

@@ -81,6 +81,7 @@ public OnPlayerLogin(playerid)
 		cPlayer->Cord[1][playerid] = cache_get_field_content_float(0, "PosY", ServerVars[MySQLHandle]);
 		cPlayer->Cord[2][playerid] = cache_get_field_content_float(0, "PosZ", ServerVars[MySQLHandle]);
 		cPlayer->Cord[3][playerid] = cache_get_field_content_float(0, "Angle", ServerVars[MySQLHandle]);
+		cPlayer->adminRank = cache_get_field_content_int(0, "Adminrank", ServerVars[MySQLHandle]);
 		
 		cache_delete(result);
 

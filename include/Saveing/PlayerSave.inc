@@ -9,8 +9,13 @@ public OnPlayerDisconnect(playerid, reason)
 		#endif
 	}
 	new str[150];
-	mysql_format(ServerVars[MySQLHandle], str, sizeof(str), "UPDATE `User` SET `PosX` = %.3f, `PosY` = %.3f, `PosZ` = %.3f, `Angle` = %.3f WHERE `uID` = %d LIMIT 1;",
-															cPlayer->Cord[0][playerid], cPlayer->Cord[1][playerid], cPlayer->Cord[2][playerid], cPlayer->Cord[3][playerid], cPlayer->uID[playerid]);
+	mysql_format(ServerVars[MySQLHandle], str, sizeof(str), "UPDATE `User` SET `PosX` = %.3f, `PosY` = %.3f, `PosZ` = %.3f, `Angle` = %.3f, `Adminrank` = %d WHERE `uID` = %d LIMIT 1;",
+															cPlayer->Cord[0][playerid], 
+															cPlayer->Cord[1][playerid], 
+															cPlayer->Cord[2][playerid], 
+															cPlayer->Cord[3][playerid], 
+															cPlayer->adminRank[playerid],
+															cPlayer->uID[playerid]);
 	mysql_pquery(ServerVars[MySQLHandle], str);
 	#if defined PlayerSave_OnPlayerDisconnect
 		return PlayerSave_OnPlayerDisconnect(playerid, reason);
