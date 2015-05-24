@@ -1,17 +1,31 @@
-#define MODE 				"Open Pawn"
+/*
+ * ----------------------------------------
+ * Some Config
+ * ----------------------------------------
+ */
 
-#define isnull(%1)  		((%1[0] == 0) || (%1[0] == 1 && %1[1] == 0))
-
-#define MAX_SKINS			311
+#define MODE 						"Open Pawn"
+#define MAX_SKINS					311
 
 /*
  * ----------------------------------------
  * Variables Restructure
  * ----------------------------------------
  */
- 
-#define cPlayer->%2[%1] 	constPlayer[%1][%2]
-#define Actor->%2[%1] 		Actors[%1][%2]
+
+#define Player->%2[%1] 				Player[%1][%2] 
+#define cPlayer->%2[%1] 			constPlayer[%1][%2]
+#define Actor->%2[%1] 				Actors[%1][%2]
+
+/*
+ * ----------------------------------------
+ * preprocess Functions
+ * ----------------------------------------
+ */
+
+#define isnull(%1)  				((%1[0] == 0) || (%1[0] == 1 && %1[1] == 0))
+#define IsPlayerSpectating(%0) 		(Player->vFlags[%0] & Spectating)
+#define IsPlayerSpawned(%0) 		(Player->vFlags[%0] & Spawned)
 
 /*
  * ----------------------------------------
@@ -19,11 +33,11 @@
  * ----------------------------------------
  */
 
-#define Color(%0)		((%0 << 8) + 0xFF)
-#define ARGB(%0)		(0xFF + (%0))
+#define Color(%0)					((%0 << 8) + 0xFF)
+#define ARGB(%0)					(0xFF + (%0))
 
-#define ColorEx(%0, %1)	((%0 << 8) + %1)
-#define ARGBEx(%0, %1)	(%1 + (%0))
+#define ColorEx(%0, %1)				((%0 << 8) + %1)
+#define ARGBEx(%0, %1)				(%1 + (%0))
 
 /*
  * ----------------------------------------

@@ -1,9 +1,10 @@
 public OnPlayerDisconnect(playerid, reason)
 {
-	new str[100];
-	mysql_format(ServerVars[MySQLHandle], str, sizeof(str), "UPDATE `User` SET `PosX` = %.3f, `PosY` = %.3f, `PosZ` = %.3f WHERE `uID` = %d LIMIT 1;",
-															cPlayer->Cord[0][playerid], cPlayer->Cord[1][playerid], cPlayer->Cord[2][playerid], cPlayer->uID[playerid]);
+	new str[150];
+	mysql_format(ServerVars[MySQLHandle], str, sizeof(str), "UPDATE `User` SET `PosX` = %.3f, `PosY` = %.3f, `PosZ` = %.3f, `Angle` = %.3f WHERE `uID` = %d LIMIT 1;",
+															cPlayer->Cord[0][playerid], cPlayer->Cord[1][playerid], cPlayer->Cord[2][playerid], cPlayer->Cord[3][playerid], cPlayer->uID[playerid]);
 	mysql_tquery(ServerVars[MySQLHandle], str);
+	print(str);
 	#if defined PlayerSave_OnPlayerDisconnect
 		return PlayerSave_OnPlayerDisconnect(playerid, reason);
 	#else
@@ -11,11 +12,26 @@ public OnPlayerDisconnect(playerid, reason)
 	#endif
 }
 
+public OnGameModeExit()
+{
+	for(new i, j = GetPlayerPoolSize(); i != j; i++)
+	{
+		if(!IsPlayerConnected(i)) continue;
+		OnPlayerDisconnect(i, 3);
+	}
+	#if defined PlayerSave_OnGameModeExit
+		return PlayerSave_OnGameModeExit();
+	#else
+		return true;
+	#endif
+}
+
 public OnPlayerUpdate(playerid)
 {
-	if((cPlayer->cFlags[playerid] & Logedin) && (cPlayer->cFlags[playerid] & LoginDone))
+	if((cPlayer->cFlags[playerid] & Logedin) && (cPlayer->cFlags[playerid] & LoginDone) && !IsPlayerSpectating(playerid) && IsPlayerSpawned(playerid))
 	{
 		GetPlayerPos(playerid, cPlayer->Cord[0][playerid], cPlayer->Cord[1][playerid], cPlayer->Cord[2][playerid]);
+		GetPlayerFacingAngle(playerid, cPlayer->Cord[3][playerid]);
 	}
 	#if defined PlayerSave_OnPlayerUpdate
 		return PlayerSave_OnPlayerUpdate(playerid);
@@ -58,3 +74,13 @@ forward PlayerSave_OnPlayerUpdate(playerid);
 		#define _ALS_OnPlayerUpdate
 #endif
 #define OnPlayerUpdate PlayerSave_OnPlayerUpdate
+
+#if defined PlayerSave_OnGameModeExit
+forward PlayerSave_OnGameModeExit();
+#endif
+#if defined _ALS_OnGameModeExit
+	#undef OnGameModeExit
+	#else
+		#define _ALS_OnGameModeExit
+#endif
+#define OnGameModeExit PlayerSave_OnGameModeExit

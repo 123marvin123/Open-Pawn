@@ -26,7 +26,7 @@ Cmd->ca(playerid, params[])
 {
 	new modelid;
 	if(sscanf(params, "d", modelid)) return SendClientMessage(playerid, Color(White), "Verwendung: /ca [modelid (0 - 311)]");
-	if(modelid < 0 && modelid > 311) return SendClientMessage(playerid, Color(White), "Verwendung: /ca [modelid (0 - 311)]");
+	if(modelid < 0 && modelid > MAX_SKINS) return SendClientMessage(playerid, Color(White), "Verwendung: /ca [modelid (0 - 311)]");
 	new actorid, str[40], Float:Pos[3];
 	GetPlayerPos(playerid, Pos[0], Pos[1], Pos[2]);
 	actorid = CreateActor(modelid, Pos[0] + 1.5, Pos[1] + 1.5, Pos[2], 0);

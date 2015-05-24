@@ -41,7 +41,12 @@ public OnPlayerConnect(playerid)
 	for(new i; i != _:const_struc; i++) cPlayer->const_struc:i[playerid] = 0;
 	cPlayer->cFlags[playerid] = const_flags:0; // Turn all Flags off
 	
+	for(new i; i != _:var_struc; i++) Player->var_struc:i[playerid] = 0;
+	Player->vFlags[playerid] = var_flags:0; // Turn all Flags off	
+	
 	GetPlayerName(playerid, cPlayer->cName[playerid], MAX_PLAYER_NAME);
+	
+	cPlayer->cFlags[playerid] |= LastPosSpawn;
 	
 	SetPlayerVirtualWorld(playerid, playerid + 1);
 	#if defined Login_OnPlayerConnect
@@ -71,13 +76,15 @@ public OnPlayerLogin(playerid)
 		new str[50];
 		mysql_format(ServerVars[MySQLHandle], str, sizeof(str), "SELECT * FROM `User` WHERE `uID` = %d LIMIT 1;", cPlayer->uID[playerid]);
 		new Cache:result = mysql_query(ServerVars[MySQLHandle], str, true);
-		constPlayer[playerid][Cord][0] = cache_get_field_content_float(0, "PosX", ServerVars[MySQLHandle]);
-		constPlayer[playerid][Cord][1] = cache_get_field_content_float(0, "PosY", ServerVars[MySQLHandle]);
-		constPlayer[playerid][Cord][2] = cache_get_field_content_float(0, "PosZ", ServerVars[MySQLHandle]);
+		
+		cPlayer->Cord[0][playerid] = cache_get_field_content_float(0, "PosX", ServerVars[MySQLHandle]);
+		cPlayer->Cord[1][playerid] = cache_get_field_content_float(0, "PosY", ServerVars[MySQLHandle]);
+		cPlayer->Cord[2][playerid] = cache_get_field_content_float(0, "PosZ", ServerVars[MySQLHandle]);
+		cPlayer->Cord[3][playerid] = cache_get_field_content_float(0, "Angle", ServerVars[MySQLHandle]);
+		
 		cache_delete(result);
 
 		SpawnPlayer(playerid);
-		SetPlayerPos(playerid, constPlayer[playerid][Cord][0], constPlayer[playerid][Cord][1], constPlayer[playerid][Cord][2]);
 		cPlayer->cFlags[playerid] |= LoginDone;
 		
 		DestroyActor(cPlayer->ActorID[playerid]);
@@ -103,6 +110,7 @@ public OnPlayerSpawn(playerid)
 {
 	if(!(cPlayer->cFlags[playerid] & Logedin))
 	{
+		Player->vFlags[playerid] &= ~Spawned;
 		new str[344];
 		#if RELEASE_STATE == DEBUG
 		format(str, sizeof(str), "Hallo %s,\n\
@@ -122,6 +130,23 @@ public OnPlayerSpawn(playerid)
 		SetPlayerCameraLookAt(playerid, -2381.4136, 2212.6426, 12.8594);
 		
 		return true; // just returning - not calling the other Hooked Callbacks
+	}
+	else if((cPlayer->cFlags[playerid] & Logedin) && (cPlayer->cFlags[playerid] & LoginDone) && (cPlayer->cFlags[playerid] & LastPosSpawn))
+	{
+		SetPlayerPos(playerid, cPlayer->Cord[0][playerid], cPlayer->Cord[1][playerid], cPlayer->Cord[2][playerid]);
+		SetPlayerFacingAngle(playerid, cPlayer->Cord[3][playerid]);
+		SetCameraBehindPlayer(playerid);
+		Player->vFlags[playerid] |= Spawned;
+		return true;
+	}
+	else if((cPlayer->cFlags[playerid] & Logedin) && (cPlayer->cFlags[playerid] & LoginDone) && (cPlayer->cFlags[playerid] & RegisterSpawn))
+	{
+		new rand = random(sizeof(Spawns));
+		SetPlayerPos(playerid, Spawns[rand][sX], Spawns[rand][sY], Spawns[rand][sZ]);
+		SetPlayerFacingAngle(playerid, Spawns[rand][sAngle]);
+		SetCameraBehindPlayer(playerid);
+		Player->vFlags[playerid] |= Spawned;
+		return true;
 	}
 	#if defined Login_OnPlayerSpawn
 		return Login_OnPlayerSpawn(playerid);
@@ -233,7 +258,7 @@ public OnPlayerDisconnect(playerid, reason)
 		DestroyActor(cPlayer->ActorID[playerid]);
 		cPlayer->ActorID[playerid] = INVALID_ACTOR_ID;
 	}
-	#if defined LoginOnPlayerDisconnect
+	#if defined Login_OnPlayerDisconnect
 		return Login_OnPlayerDisconnect(playerid, reason);
 	#else
 		return true;
@@ -303,7 +328,10 @@ public OnPasswordCheck(playerid, input[])
 {
 	new password[140], DB_Hash[BCRYPT_HASH_LENGTH];
 	cache_get_row(0, 0, DB_Hash, ServerVars[MySQLHandle]);
-	format(password, sizeof(password), "%s%s", cPlayer->cName[playerid], input);
+	
+	strcat(password, cPlayer->cName[playerid]);
+	strcat(password, input);
+	
 	bcrypt_check(password, DB_Hash, "OnPasswordChecked", "d", playerid);
 	return true;
 }
@@ -332,10 +360,10 @@ public OnPlayerRegister(playerid)
 		ResetSkinPreview(playerid);		
 		HideRegisterDraws(playerid);
 		
-		new rand = random(sizeof(Spawns));
-		SetPlayerPos(playerid, Spawns[rand][sX], Spawns[rand][sY], Spawns[rand][sZ]);
-		SetPlayerFacingAngle(playerid, Spawns[rand][sAngle]);
-		SetCameraBehindPlayer(playerid);		
+		cPlayer->cFlags[playerid] |= LoginDone;
+		
+		cPlayer->cFlags[playerid] |= RegisterSpawn;
+		SpawnPlayer(playerid);
 		
 		TextDrawHideForPlayer(playerid, ServerVars[RegisterArrow][0]);
 		TextDrawHideForPlayer(playerid, ServerVars[RegisterArrow][1]);
