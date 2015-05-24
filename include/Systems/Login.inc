@@ -131,7 +131,7 @@ public OnPlayerSpawn(playerid)
 		
 		return true; // just returning - not calling the other Hooked Callbacks
 	}
-	else if((cPlayer->cFlags[playerid] & Logedin) && (cPlayer->cFlags[playerid] & LoginDone) && (cPlayer->cFlags[playerid] & LastPosSpawn))
+	else if((cPlayer->cFlags[playerid] & Logedin) && (cPlayer->cFlags[playerid] & LoginDone) && (cPlayer->cFlags[playerid] & LastPosSpawn) && !(cPlayer->cFlags[playerid] & RegisterSpawn))
 	{
 		SetPlayerPos(playerid, cPlayer->Cord[0][playerid], cPlayer->Cord[1][playerid], cPlayer->Cord[2][playerid]);
 		SetPlayerFacingAngle(playerid, cPlayer->Cord[3][playerid]);
@@ -361,7 +361,7 @@ public OnPlayerRegister(playerid)
 		HideRegisterDraws(playerid);
 		
 		cPlayer->cFlags[playerid] |= LoginDone;
-		
+		SetPlayerVirtualWorld(playerid, 0);
 		cPlayer->cFlags[playerid] |= RegisterSpawn;
 		SpawnPlayer(playerid);
 		
