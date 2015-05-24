@@ -1,10 +1,17 @@
 public OnPlayerDisconnect(playerid, reason)
 {
+	if(!cPlayer->uID[playerid])
+	{
+		#if defined PlayerSave_OnPlayerDisconnect
+			return PlayerSave_OnPlayerDisconnect(playerid, reason);
+		#else
+			return true;
+		#endif
+	}
 	new str[150];
 	mysql_format(ServerVars[MySQLHandle], str, sizeof(str), "UPDATE `User` SET `PosX` = %.3f, `PosY` = %.3f, `PosZ` = %.3f, `Angle` = %.3f WHERE `uID` = %d LIMIT 1;",
 															cPlayer->Cord[0][playerid], cPlayer->Cord[1][playerid], cPlayer->Cord[2][playerid], cPlayer->Cord[3][playerid], cPlayer->uID[playerid]);
-	mysql_tquery(ServerVars[MySQLHandle], str);
-	print(str);
+	mysql_pquery(ServerVars[MySQLHandle], str);
 	#if defined PlayerSave_OnPlayerDisconnect
 		return PlayerSave_OnPlayerDisconnect(playerid, reason);
 	#else
