@@ -111,21 +111,6 @@ Cmd->streamskintest(playerid, params[])
 	SetPlayerSkin(playerid, rand);
 	return true;
 }
-Cmd->makeadmin(playerid, params[]) {
-	new user, adminrank, string[128], name[128];
-	if(!IsPlayerAdmin(playerid)) return SendClientMessage(playerid, Color(White), "Du bist kein RCON Administrator!");
-	if(sscanf(params, "ui", user, adminrank)) return SendClientMessage(playerid, Color(White), "Verwendung: /makeadmin [Teil des Benutzernames / Benutzerid] [Rank]");
-	if(!IsPlayerConnected(user)) return SendClientMessage(playerid, Color(White), "Der Benutzer ist nicht online.");
-	GetPlayerName(user, name, sizeof(name));
-	format(string, sizeof(string), "Du hast dem Benutzer %s den Adminrank %d gegeben!", name, adminrank); SendClientMessage(playerid, Color(White), string);
-	GetPlayerName(playerid, name, sizeof(name));
-	format(string, sizeof(string), "Der Benutzer %s hat dir den Adminrank %d gegeben!", name, adminrank); SendClientMessage(playerid, Color(White), string);
-	
-	cPlayer->adminRank[user] = adminrank;
-
-	return true;
-}
-
 
 public OnPlayerObjectMoved(playerid, objectid)
 {

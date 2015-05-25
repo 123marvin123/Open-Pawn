@@ -279,5 +279,10 @@ enum
 	Yellow = 0xFFFF00,
 	LightYellow = 0xFFFFE0,
 	Ivory = 0xFFFFF0,
-	White = 0xFFFFFF
+	White = 0xFFFFFF,
+	
+	Hint = 0x007DFF,
+	Error = 0xB90000,
+	Info = 0xFFFA00,
+	Warn = 0xFF4600
 };
