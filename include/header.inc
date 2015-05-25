@@ -67,7 +67,7 @@
 #if RELEASE_STATE == DEBUG
 	#include <../../include/CMDs/DebugCMDs>
 #endif
- 
+#include <../../include/CMDs/Admin>
 /*
  * ---------------------------------------------------------
  * Systems Part

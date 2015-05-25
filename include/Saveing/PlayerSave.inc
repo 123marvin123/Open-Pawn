@@ -14,7 +14,7 @@ public OnPlayerDisconnect(playerid, reason)
 															cPlayer->Cord[1][playerid], 
 															cPlayer->Cord[2][playerid], 
 															cPlayer->Cord[3][playerid], 
-															cPlayer->adminRank[playerid],
+															cPlayer->AdminRank[playerid],
 															cPlayer->uID[playerid]);
 	mysql_pquery(ServerVars[MySQLHandle], str);
 	#if defined PlayerSave_OnPlayerDisconnect
