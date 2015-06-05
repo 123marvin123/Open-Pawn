@@ -840,8 +840,9 @@ CREATE TABLE IF NOT EXISTS `User` (
   `PosX` float NOT NULL,
   `PosY` float NOT NULL,
   `PosZ` float NOT NULL,
-  `Angle` float NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=latin1;
+  `Angle` float NOT NULL,
+  `Adminrank` int(11) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 --
 -- Triggers `User`
