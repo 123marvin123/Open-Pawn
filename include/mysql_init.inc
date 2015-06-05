@@ -32,9 +32,11 @@ public OnGameModeExit()
 {
 	if(!(ServerVars[Flags] & NoConnectionShutDown))
 	{
+		new tc = tickcount();
+		while((tickcount() - tc) < 3000) //pause server for 3 seconds
+		{ }
 		mysql_close(ServerVars[MySQLHandle]);
 	}
-
 	#if defined mysql_OnGameModeExit
 		return mysql_OnGameModeExit();
 	#else
@@ -66,7 +68,7 @@ public ShuttingDown()
 #define OnGameModeInit mysql_OnGameModeInit
 
 #if defined mysql_OnGameModeExit
-forward mysql_OnGameModeExit();
+	forward mysql_OnGameModeExit();
 #endif
 #if defined _ALS_OnGameModeExit
 	#undef OnGameModeExit

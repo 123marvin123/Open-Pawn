@@ -5,6 +5,7 @@
  */
 
 forward OnPasswordHashed(playerid);
+forward OnUserIDSelected(playerid, hash[]);
 forward OnPlayerAccountCheck(playerid);
 forward OnPasswordCheck(playerid, input[]);
 forward OnPasswordChecked(playerid);
@@ -273,12 +274,21 @@ public OnPasswordHashed(playerid)
 	
 	new hash[BCRYPT_HASH_LENGTH];
 	bcrypt_get_hash(hash);
-	new query[300];
+	new query[150];
 	
 	mysql_format(ServerVars[MySQLHandle], query, sizeof(query), "INSERT INTO `User` (`Name`, `Skin`) VALUES ('%e', -1);", cPlayer->cName[playerid]);
 	mysql_tquery(ServerVars[MySQLHandle], query);
 	
-	mysql_format(ServerVars[MySQLHandle], query, sizeof(query), "INSERT INTO `Password`(`UserID`, `Hash`) VALUES ((SELECT `uID` FROM `User` WHERE `Name` = '%e' LIMIT 1), '%e');", cPlayer->cName[playerid], hash);
+	mysql_format(ServerVars[MySQLHandle], query, sizeof(query), "SELECT `uID` FROM `User` WHERE `Name` = '%e' LIMIT 1;", cPlayer->cName[playerid]);
+	mysql_tquery(ServerVars[MySQLHandle], query, "OnUserIDSelected", "ds", playerid, hash);
+	return true;
+}
+
+public OnUserIDSelected(playerid, hash[])
+{
+	cPlayer->uID[playerid] = cache_get_row_int(0, 0, ServerVars[MySQLHandle]); // 0 = uID
+	new query[150];
+	mysql_format(ServerVars[MySQLHandle], query, sizeof(query), "INSERT INTO `Password`(`UserID`, `Hash`) VALUES (%d, '%e');", cPlayer->uID[playerid], hash);
 	mysql_tquery(ServerVars[MySQLHandle], query);
 	return true;
 }

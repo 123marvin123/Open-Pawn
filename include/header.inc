@@ -84,6 +84,7 @@
 
 // #include <../../include/Handle/GlobalTextdrawHandler> Currently empty
 #include <../../include/Handle/ActorHandler>
+#include <../../include/Handle/AdminHandler>
 
 /*
  * ---------------------------------------------------------
@@ -91,11 +92,4 @@
  * ---------------------------------------------------------
  */
  
-#include <../../include/Saveing/PlayerSave>
-
-/*
- * ---------------------------------------------------------
- * Admin System
- * ---------------------------------------------------------
-*/
 #include <../../include/Saveing/PlayerSave>
