@@ -1,6 +1,14 @@
 *.gitignore
 *.gitattributes
 
+/.settings
+/target
+/.classpath
+/.project
+/dependency-reduced-pom.xml
+/.idea
+/*.iml
+
 ############
 ## Windows
 ############
@@ -52,7 +60,7 @@ gamemodes/Backups/
 include/Backups/
 
 #unwanted .inc
-mysql_data.inc
-*.xml
+include/Info/mysql_data.inc
+
 *.lst
 *.tde
